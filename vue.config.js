@@ -29,18 +29,18 @@ module.exports = {
       //     '^/Openapi': ''
       //   }
       // },
-      "/Openapi": {
-        target: "http://activity.qmlid.top/ftms", //对应自己的接口
+      // "/Openapi": {
+      //   target: "http://activity.qmlid.top/ftms", //对应自己的接口
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     "^/Openapi": ""
+      //   }
+      // },
+      "/api": {
+        target: "https://www.octlr.com/api", //对应自己的接口
         changeOrigin: true,
         pathRewrite: {
-          "^/Openapi": ""
-        }
-      },
-      "/qmlid": {
-        target: "http://kfc.octlr.com", //对应自己的接口
-        changeOrigin: true,
-        pathRewrite: {
-          "^/qmlid": ""
+          "^/api": "/"
         }
       },
 

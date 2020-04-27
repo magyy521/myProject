@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './pages/Home.vue'
-import Order from './pages/Order.vue'
 import Record from './pages/Record.vue'
 import My from './pages/My.vue'
 import ChooseType from './pages/ChooseType.vue'
@@ -13,18 +12,18 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'index',
+      redirect: '/home'
+    },
+    {
+      path: '/home',
       name: 'home',
-      component: Home
+      component: Home,
     },
     {
       path: '/record',
       name: 'record',
       component: Record
-    },
-    {
-      path: '/order',
-      name: 'order',
-      component: Order
     },
     {
       path: '/my',

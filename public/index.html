@@ -3,9 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
     <!-- <meta name="viewport" content="width=device-width,initial-scale=1.0"> -->
-    <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico"> -->
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title></title>
+    <!-- <script>localStorage.clear();</script> -->
   </head>
   <body>
     <noscript>
@@ -16,7 +18,11 @@
     </noscript>
     <div id="app"></div>
 
-    <script src="//bizadv.lizhi.fm/festatic/plugins/lzsdk.js"></script>
+    <!-- <script src="//bizadv.lizhi.fm/festatic/plugins/lzsdk.js"></script> -->
+    <!-- <script src="http://vodactivity.lizhifm.com/static/vodfe/jssdk.0.1.20.min.js"></script>
+    <script src="//res.wx.qq.com/open/js/jweixin-1.6.0.js"></script> -->
+      <script src="<%= BASE_URL %>static/jssdk.0.1.20.min.js"></script>
+      <script src="<%= BASE_URL %>static/jweixin-1.6.0.js"></script>
     <!-- built files will be auto injected -->
   </body>
 </html>

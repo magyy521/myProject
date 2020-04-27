@@ -3,8 +3,7 @@
     
     <div class="my_content">
       <div class="head_content" @click="playMyAudio">
-        <img v-if="headURL" class="head_img" :src="headURL" alt="" />
-        <img v-else class="head_img" src="../assets/img/head.png" alt="" />
+        <img v-if="headUrl" class="head_img" :src="headUrl" alt="" />
         <img
           v-show="playStatus == 3"
           class="pause_img"
@@ -29,9 +28,9 @@
       <div class="user_info">
         <p class="info_line">用户名称{{userName}}</p>
         <p class="info_line">目前的票数 {{ qty }}</p>
-        <p class="info_line">排名 {{ ranking }}</p>
+        <p class="info_line">排名 {{ rank }}</p>
       </div>
-      <p class="info_line">作品标题 {{ title }}</p>
+      <p class="info_line audio_title">作品标题 {{ title }}</p>
       <div class="btns">
         <button  @click="shareHandler">
           <!-- 拉票 -->
@@ -57,12 +56,12 @@ export default {
     return {
       id: "",
       qty: "",
-      ranking: "",
+      rank: "",
       title: "",
       url: "",
       userName: "",
       playStatus: 1,
-      headURL: ""
+      headUrl: ""
     };
   },
   methods: {
@@ -81,10 +80,7 @@ export default {
         return;
       }
       this.axios
-        .post(api.submitVote, {
-          soundId: this.id,
-          userId: this.$store.state.userId
-        })
+        .get(`${api.submitVote}?audioId=${this.id}&userId=${this.$store.state.userId}`)
         .then(res => {
           this.$toast.center("投票成功");
           this.$store.commit("setUser", {
@@ -103,19 +99,19 @@ export default {
     },
     // 根据id获取某个音频详情
     getDetail() {
-      this.axios.get(`${api.getVoiceById}/${this.id}`).then(res => {
+      this.axios.get(`${api.getAudioDetail}?id=${this.id}`).then(res => {
         let data = res.data.data;
-        this.ranking = data.ranking;
+        this.rank = data.rank;
         this.qty = data.qty;
         this.title = data.title;
         this.userName = data.userName;
         this.url = data.url;
-        this.headURL = data.headURL;
+        this.headUrl = data.headUrl;
       });
     },
     playMyAudio() {
       let audio = this.$refs.myRadio;
-      if (audio !== null) {
+      if (audio !== null && this.url) {
         //检测播放是否已暂停.audio.paused 在播放器播放时返回false.
         if (audio.paused) {
           audio.play(); //audio.play();// 这个就是播放
@@ -124,6 +120,8 @@ export default {
           audio.pause(); // 这个就是暂停
           this.playStatus = 2;
         }
+      }else {
+        this.$toast.center("暂无音频");
       }
     },
     myVideoEnded() {
@@ -141,11 +139,10 @@ export default {
   position: relative;
   height: 100vh;
   width: 100%;
+  padding-top: 240px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   background: url("../assets/img/my_bg.png") top center no-repeat;
   background-size: contain;
 
@@ -170,13 +167,12 @@ export default {
       margin-right: 20px;
       background-repeat: no-repeat;
       background-size: cover;
-
+      background-color: #fff;
+      border: 1px solid #c70025;
       .head_img {
         width: 100%;
         border-radius: 50%;
         overflow: hidden;
-        border: 1px solid #c70025;
-
       }
       .pause_img,
       .play_img {
@@ -217,15 +213,20 @@ export default {
       }
     }
     .info_line {
-      margin-bottom: 25px;
+      height: 14px;
+      line-height: 1.5;
       max-height: 50px;
       overflow: hidden;
     }
+    .audio_title {
+      padding: 13px 0;
+    }
   }
+  
 }
 .back_home_btn {
   display: block;
-  margin-top: 22px;
+  margin: 22px auto 0;
   width: 83px;
   height: 36px;
   img {

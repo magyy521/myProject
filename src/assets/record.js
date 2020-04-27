@@ -18,10 +18,8 @@ let WechatVoice = {
   startTime: 0,
   status: STATUS.nothing,
   ready: (cb) => {
-    console.log('wx录音已经ready')
-    console.log('wx',wx)
+    console.log('wx录音已经开始掉ready方法')
     wx.ready(cb);
-    
   },
   start: (cb) => {
     if (WechatVoice.status == STATUS.recording) {
@@ -50,6 +48,7 @@ let WechatVoice = {
     let that = this;
     console.log('微信点击停止录音')
     if (WechatVoice.status == STATUS.nothing) {
+      console.log('尚未开始录音?????')
       cb("尚未开始录音", null);
       return;
     }
@@ -72,7 +71,7 @@ let WechatVoice = {
             cb(err, null);
             return;
           }
-          console.log('微信将录音转换为MP3')
+          console.log('微信将录音转换为MP3',data)
           changeMediaToMp3(data)
             .then((mp3Link) => {
               console.log('微信将录音转换为MP3成功,结果是',mp3Link)
@@ -92,6 +91,7 @@ let WechatVoice = {
   },
   upLocalIdToMediaId(localId, cb) {
     console.log('upLocalIdToMediaId,然后调取wx.uploadVoice,localId是本地id',localId)
+    
     wx.uploadVoice({
       localId: localId, // 需要上传的音频的本地ID，由stopRecord接口获得
       isShowProgressTips: 0, // 默认为1，显示进度提示
@@ -233,6 +233,7 @@ let Record = {
     Record.list[key] = instant;
   },
   start: (cb, progressCb = null) => {
+    console.log('没有调起来为什么',Record.coreIns)
     Record.coreIns.ready(err => {
       console.log('封装的Record,ready',err)
       if (err) {
@@ -255,9 +256,23 @@ let Record = {
         }, 500);
       });
     });
+    Record.coreIns.start((err2, data) => {
+      console.log('封装的Record,start',err2,data)
+      if (err2) {
+        return cb(err2);
+
+      }
+      cb && cb(null, data);
+      let count = 0;
+      Record.timer && clearInterval(Record.timer);
+      Record.timer = setInterval(() => {
+        ++count;
+        progressCb && progressCb(count * 500);
+      }, 500);
+    });
   },
   stop: (upload, cb) => {
-    console.log('封装的Record,stop',upload)
+    console.log('封装的Record, stop',upload)
     Record.timer && clearInterval(Record.timer);
     Record.coreIns.stop(upload, cb);
   }
@@ -266,7 +281,6 @@ Record.register('wechat', WechatVoice)
 
 Record.register('lizhi', LizhiVoice)
 export default function (type = 'wechat') {
-  console.log('type',type)
   Record.setEngine(type);
 
   return Record

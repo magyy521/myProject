@@ -25,6 +25,7 @@ export const getQueryString = name => {
 };
 export const wechatOauth = (link, cb) => {
   if (localStorage.getItem("userInfo")) {
+    console.log('localStorage.getItem("userInfo")',localStorage.getItem("userInfo"))
     cb(localStorage.getItem("userInfo"));
     return localStorage.getItem("userInfo");
   }
@@ -66,6 +67,7 @@ export const fetchLizhiUserInfo = () => {
       resolve(JSON.parse(localStorage.getItem("lzUser")));
       return;
     }
+    console.log('调取lz.ready',lz)
     lz.ready(() => {
       LizhiJSBridge.call("getSessionUser", {}, function(ret) {
         if (!ret.id) {
@@ -79,11 +81,19 @@ export const fetchLizhiUserInfo = () => {
           },
           function(tokenRet) {
             let token = tokenRet.token;
-            axios
-              .get(
-                `https://mkactivity.lizhifm.com/soundfestvote/fest/get_man_head_out?token=${token}`
-              )
+            console.log('kkkkkk',tokenRet)
+            axios({
+              method:'get',
+              url: 'https://oauthbiz.lizhi.fm/mapi/getLizhiUserInfo',
+              headers: {
+                'token':token
+              }
+            })
+              // .get(
+              //   `https://mkactivity.lizhifm.com/soundfestvote/fest/get_man_head_out?token=${token}`
+              // )
               .then(resp => {
+                console.log('获取用户信息',resp)
                 if (resp.data.rCode == 0) {
                   let userInfo = {
                     id: ret.id,
@@ -93,7 +103,9 @@ export const fetchLizhiUserInfo = () => {
                   localStorage.setItem("lzUser", JSON.stringify(userInfo));
                   resolve(userInfo);
                 }
-              });
+              }).catch(err=>{
+                console.log('获取lz用户信息失败',err)
+              })
           }
         );
       });

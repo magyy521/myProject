@@ -15,10 +15,10 @@ export default new Vuex.Store({
     url: "", //录音上传的地址
     title: "", //录音的名字
     vote: 0,
-    attintion: false,
-    headUrl: "",
-    voteQty: 10, //每天可以投多少票 需要从获取用户详情的接口中获取
-    playStatus: 1 //我的音频播放状态
+    headUrl: "", // 用户头像地址
+    voteQty: 0, //每天可以投多少票 默认每天是10 需要从获取用户详情的接口中获取
+    playStatus: 1 ,//我的音频播放状态
+    votesNum: 0, // 我的音频得到多少票
   },
   getters: {
     activityOver: state =>{
@@ -38,6 +38,7 @@ export default new Vuex.Store({
     },
     setUser(state, params) {
       console.log("setUser", params);
+      // 为什么不用这个...
       // Object.keys(params).forEach(v=>{
       //   state[v] = params[v]
       // })

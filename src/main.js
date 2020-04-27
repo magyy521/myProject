@@ -6,8 +6,6 @@ Vue.config.productionTip = false;
 import LoadScript from "vue-plugin-load-script";
 Vue.use(LoadScript);
 
-import moment from "moment";
-Vue.prototype.$moment = moment;
 
 import "vue2-toast/lib/toast.css";
 import Toast from "vue2-toast";
@@ -21,11 +19,9 @@ import "lib-flexible";
 import axios from "axios";
 import { UA, wechatOauth } from "./utils";
 
-// import VC from "vconsole";
-//
-// new VC();
-// import VueAxios from "vue-axios";
-// Vue.use(VueAxios, axios);
+import VC from "vconsole";
+
+new VC();
 
 Vue.prototype.axios = axios;
 
@@ -36,12 +32,13 @@ if (UA.wx) {
   });
 } else {
   if (UA.lz) {
-    window["lz"].config({
-      debug: false,
-      url: "https://h5security.lizhi.fm/jsBridgeConfig/get",
-      apiList: ["getToken", "shareImage", "saveImage"],
-      eventList: ["user:login"]
-    });
+    console.log('window,',window)
+    // window["lz"] && window["lz"].config({
+    //   debug: false,
+    //   url: "https://h5security.lizhi.fm/jsBridgeConfig/get",
+    //   apiList: ["getToken", "shareImage", "saveImage"],
+    //   eventList: ["user:login"]
+    // });
   }
   bootStrap();
 }

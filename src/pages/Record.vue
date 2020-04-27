@@ -1,43 +1,42 @@
 <template>
   <div class="record_page">
     <div v-if="step != 3" class="choose_back_btn" @click="backHome"></div>
+
     <div v-if="step == 1" class="step1_container">
-      <div class="swiper_tip">可左右选取你想朗读的文章</div>
+      <div  class="swiper_tip">
+        <span v-if="audioType == 1">可左右选取你想朗读的文章</span>
+      </div>
       <div class="swiper_part" >
-        <div class="swiper-prev-btn" @click="swiperPrev">
+        <div v-if="audioType == 1" class="swiper-prev-btn" @click="swiperPrev">
           <img src="../assets/img/swiper_prev.png" alt="">
         </div>
-        <div class="out_swiper_container" @click="playMyAudio">
+        <div class="out_swiper_container">
           <swiper :options="swiperOption" ref="mySwiper">
             <!-- slides -->
-            <swiper-slide>
-              <img src="../assets/img/cars/1.jpg" alt="" />
-            </swiper-slide>
-            <swiper-slide>
-              <img src="../assets/img/cars/2.jpg" alt=""
-            /></swiper-slide>
-            <swiper-slide>
-              <img src="../assets/img/cars/3.jpg" alt=""
-            /></swiper-slide>
-            <swiper-slide>
-              <img src="../assets/img/cars/4.jpg" alt=""
-            /></swiper-slide>
-            <swiper-slide>
-              <img src="../assets/img/cars/5.jpg" alt=""
-            /></swiper-slide>
-            <!-- Optional controls -->
-            
-            
           </swiper>
-          <p class="scroll_text">滑动可显示更多文字</p>
+          <p v-if="audioType == 1" class="scroll_text">滑动可显示更多</p>
         </div>
-        <div class="swiper-next-btn" @click="swiperNext">
+        <div v-show="audioType == 1" class="swiper-next-btn" @click="swiperNext">
           <img src="../assets/img/swiper_next.png" alt="">
         </div>
       </div>
-      <p  class="record_time">
+      <div  class="record_time">
         <span v-show="timeLong > 0 && recording">00:{{ timeLongShow }}/01:00</span>
-      </p>
+        <div class="play_my_audio_btn_container" v-show="recordComplete && timeLong >5" @click="playMyAudio" >
+          <img class="control_play_img" v-show="$store.state.playStatus == 1 || $store.state.playStatus == 2 " src="../assets/img/local_play_audio.png" alt="" />
+          <img class="control_play_img" v-show="$store.state.playStatus == 3" src="../assets/img/local_pause_audio.png" alt="" />
+        </div>
+
+        <audio
+        ref="myRadio"
+        :src="$store.state.url"
+        controls="controls"
+        @ended="endAudio()"
+        class="star_head_audio"
+      >您的手机不支持此格式</audio>
+
+        
+      </div>
 
       <div class="record_btns_container">
         <button v-if="!recording && !recordComplete" @click="start" class="record_btn start_btn ">
@@ -49,21 +48,16 @@
           <img src="../assets/img/complete_btn.png" alt="完成" />
           <p class="btn_text">正在录音...</p>
         </button>
+
         <button v-if="recordComplete" class="record_btn restart_btn" @click="start">
           <img src="../assets/img/re_record.png" alt="重录" />
           <p class="btn_text">重录</p>
         </button>
+
         <button v-if="recordComplete && timeLong >5" class="record_btn record_next_btn"  @click="next">
           <img src="../assets/img/next_btn.png" alt="下一步" />
           <p class="btn_text">完成</p>
         </button>
-
-      </div>
-
-
-
-      <div v-if="recordComplete" class="btns">
-        
       </div>
     </div>
     
@@ -79,7 +73,7 @@
           <p class="param_label">真实姓名(必填)</p>
           <input
             @blur="downPage"
-            v-model="trueName"
+            v-model="realName"
             class="input"
             type="text"
             placeholder=""
@@ -98,14 +92,14 @@
         </div>
         <div class="param_item">
           <p class="param_label">所在地区(必填)</p>
-          <select class="input province_select" name="" id="" v-model="userProvince">
+          <select class="input province_select" name="" id="" v-model="area">
             <option v-for="(item,index) in provinceList" :key="index" :value="item">{{item}}</option>
           </select>
         </div>
         <div class="param_item">
           <p class="param_label">参赛组别(必填)</p>
-          <div class="input type_choose adults_choose " :class="userType == 1 ? ' checked' : ''" @click="userType = 1" >成人组</div>
-          <div class="input type_choose" :class="userType == 2 ? ' checked' : ''" @click="userType = 2">少儿组(18周岁以下)</div>
+          <div class="input type_choose adults_choose " :class="userType == 2 ? ' checked' : ''" @click="userType = 2" >成人组</div>
+          <div class="input type_choose" :class="userType == 1 ? ' checked' : ''" @click="userType = 1">少儿组(18周岁以下)</div>
         </div>
         <div class="privacy_item">
           <label class="input_label" for="check">
@@ -155,20 +149,23 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 import uuid from "uuid-js";
 import { api } from "../api";
 import { jsConfig } from "../assets/wechat_outh";
-console.log("NewReord", NewReord);
+import articleList from "../assets/articles"
+import areas from '../assets/areas'
+console.log('articleList',articleList)
 export default {
   name: "home",
   components: { MaskC,swiper,swiperSlide,Privacy },
   data: function() {
     return {
-      provinceList:['河北','山西','辽宁','吉林','黑龙江','江苏','浙江','安徽','福建','江西','山东','河南','湖北','湖南','广东','海南','四川','贵州','云南','陕西','甘肃','青海','台湾','内蒙古','广西','西藏','宁夏','新疆','北京','天津','上海','重庆','香港','澳门'],
+      audioType: 1,//上传的类型,1是阅读 ,2是故事
+      provinceList: areas,
       step: 1,
-      headURL: "",
+      headUrl: "",
       phone: "",
       title: "爱暖童心,声声不息",
-      userProvince: '',
-      userType: '',
-      trueName: '',
+      area: '',
+      userType: '', // 1少儿 2成人
+      realName: '',
       nickname: "",
       url: "",
       id: "",
@@ -216,6 +213,7 @@ export default {
     endRecord() {
       this.NewReord.stop(true, (msg, data) => {
         this.url = data;
+
         if (msg) {
           this.$toast.center("网络繁忙，请刷新重试");
           return;
@@ -223,6 +221,7 @@ export default {
         console.log("录音上传的地址", data);
         // 录音上传的地址
         this.$store.state.url = data;
+        
       });
     },
     // 点击开始录音的按钮,初始化一些数据
@@ -238,12 +237,6 @@ export default {
     startTime() {
       this.timer = setInterval(() => {
         this.timeLong++;
-        // if (UA.wx) {
-        //   if (this.timeLong >= this.allTime) {
-        //     this.stop();
-        //   }
-        // }
-
         if (this.timeLong >= this.allTime) {
             this.stop();
           }
@@ -267,11 +260,11 @@ export default {
         this.$toast.center("请同意隐私协议");
         return;
       }
-      if (!this.trueName) {
+      if (!this.realName) {
         this.$toast.center("请输入真实姓名");
         return;
       }
-      if (!this.userProvince) {
+      if (!this.area) {
         this.$toast.center("请选择地区");
         return;
       }
@@ -285,27 +278,31 @@ export default {
       }
 
       let state = this.$store.state;
-      // let headURLObj = UA.wx ? { headURL: this.wechatUserInfo.headimgurl } : {};
-      let headURLObj = {};
+      // let headUrlObj = UA.wx ? { headUrl: this.wechatUserInfo.headimgurl } : {};
+      let headUrlObj = {};
       if (!state.userId) {
         let newId = uuid.create(1);
         this.$store.commit("setUser", {
           prop: "userId",
           val: newId.hex,
-          ...headURLObj
+          ...headUrlObj
         });
       }
+      console.log('state.userId',state.userId)
+      // return
       // 将用户上传的音频参数传到数据库中去,包括音频地址,用户id,用户名称等等
       this.axios
-        .post(api.saveAudio, {
+        .post(api.addAudio, {
           userId: this.$store.state.userId,
           phone: this.phone,
           title: this.title,
           url: this.url,
-          userName: this.$store.state.userName,
+          realName: this.realName,
+          audioType: this.audioType,
+          userType: this.userType,
+          area: this.area,
         })
         .then(res => {
-          console.log("res,,,,,,,,,", res);
           this.step = 3;
           // 上传完成，去成功页面
         })
@@ -314,40 +311,17 @@ export default {
           console.log("提交失败", err);
         });
     },
-    // 更新用户信息
-    updateUserAudio() {
-      this.axios
-        .post(`${api.getMyVoice}/${this.$store.state.userId}`, {})
-        .then(res => {
-          let data = res.data.data || {};
 
-          this.$store.commit("setUser", { prop: "phone", val: data.phone });
-          this.$store.commit("setUser", { prop: "url", val: data.url });
-          this.$store.commit("setUser", { prop: "title", val: data.title });
-          this.$store.commit("setUser", {
-            prop: "userName",
-            val: data.userName
-          });
-          this.$store.commit("setUser", { prop: "qty", val: data.qty || 0 });
-          this.$store.commit("setUser", {
-            prop: "hasReward",
-            val: data.rewardFlag
-          });
-          this.$store.commit("setUser", {
-            prop: "ranking",
-            val: data.ranking
-          });
-        });
-    },
     downPage() {
       window.scroll(0, 0);
     },
     playMyAudio() {
-      // if (!this.$store.state.url) {
-      //   console.log("没有地址");
-      //   this.$toast.center("暂无音频");
-      //   return false;
-      // }
+      console.log('this.$store.state.url',this.$store.state.url)
+      if (!this.$store.state.url) {
+        console.log("没有地址");
+        this.$toast.center("暂无音频");
+        return false;
+      }
       let audio = this.$refs.myRadio;
       if (audio !== null) {
         //检测播放是否已暂停.audio.paused 在播放器播放时返回false.
@@ -360,15 +334,85 @@ export default {
         }
       }
     },
+    // 音频播放到结束
+    endAudio(){
+      this.$store.commit("setUser", { prop: "playStatus", val: 1 });
+    },
     stopAudio() {
       let audio = this.$refs.myRadio;
-      if (!audio) {
-        audio.pause(); // 这个就是暂停
-        this.$store.commit("setUser", { prop: "playStatus", val: 2 });
+      if (audio !== null) {
+        let paused = audio.paused;
+        if (paused) {
+
+        } else {
+          audio.pause(); // 这个就是暂停
+          this.$store.commit("setUser", { prop: "playStatus", val: 2 });
+        }
+
       }
     },
     showPrivacy(){
       this.$refs.privacy.show();
+    },
+    initSwiperContent(){
+      let list = [];
+      let dom='';
+      if(this.audioType == 1){
+        list = articleList;
+        list.forEach(item=>{
+          dom += `<div class="swiper-slide"><div class="text-content">
+            <div class='artIndex'>${item.artIndex}</div>
+            <div class='artCommon'>我是XXX，“爱暖童心，声声不息”。</div>
+            <div class='artIntro'>${item.artIntro}</div>
+            ${item.artTitle ?  "<div class='artTitle'>" + item.artTitle + "</div>": ''}
+            <div class='artContent'>${item.artContent}</div>
+          </div></div></div>`
+        })
+      }else {
+        let type2Dom = `
+        <div class="swiper-slide"><div class="text-content">
+        <p class="type2_title">话题方向参考：</p>
+        <p class="type2_p">1、、突如其来的疫情给你的生活带来改变了吗？你是如何调节心适应这种变化的？分享你的故事，帮助“小候鸟”提升情绪管理能力</p>
+        <p class="type2_p">2、你会有“拖延症“的困扰吗？分享你让自己更自律的好方法，帮助”小候鸟“提升自我管理能力</p>
+        <p class="type2_p">3、你是否也曾经是一个“小候鸟”？曾有过父母长时间不在身边，或者随父母离开家乡漂泊在外的经历。分享你的故事，帮助小候鸟理解父母，更好与身边人相处</p>
+        <p class="type2_p">4、关于保持心理健康，成为更好的自己，你想对“小候鸟”们说些什么……</p>
+        </div></div></div>
+        `
+        dom = type2Dom
+      }
+      
+      
+      
+      this.swiper.appendSlide(dom)
+    },
+    initShareConfig(type){
+      if(type == "lizhi"){
+        lz && lz.shareUrl({
+          "url": "https://vodactivity.lizhifm.com/static/kfc/#/home", //分享的url
+          "title": "为XXX拉票", //分享标题
+          "desc": "我正在为XXX拉票，大家帮帮我吧", // 分享的描述
+          "image-url": "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg", //分享的图片
+        //   "platforms": [22, 23] // 分享的平台（可选，若不指定则由客户端显示全部可分享的平台）
+        })
+
+        lz && lz.configShareUrl({
+          "url": "https://vodactivity.lizhifm.com/static/kfc/#/home", //分享的url
+          "title": "为XXX拉票", //分享标题
+          "desc": "我正在为XXX拉票，大家帮帮我吧", // 分享的描述
+          "image-url": "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg", //分享的图片
+        })
+        console.log('lz && lz.configShareUrl',lz && lz.configShareUrl)
+
+      }
+
+      if(type == "wechat") {
+        wechatShare({
+          title: '为我拉票',
+          link: 'https://vodactivity.lizhifm.com/static/kfc/#/home',
+          desc: '描述内容',
+          imgUrl: "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg",
+        });
+      }
     }
   },
   computed: {
@@ -377,23 +421,38 @@ export default {
     },
     timeLongShow(){
       return this.timeLong > 9 ? String(this.timeLong) : `0${this.timeLong}`
-    }
+    },
+    
   },
   created() {
+    console.log('录音界面created')
+    let audioType = this.$route.query.type
+    if(this.$route.query.type) {
+      this.audioType = audioType
+    }
     let type = UA.lz ? "lizhi" : UA.wx ? "wechat" : "chrome";
     this.NewReord = NewReord(type);
     if (UA.wx && "wx" in window) {
       if(!(navigator.userAgent.indexOf('iPhone') > -1)){
         // 非苹果系统,那么重新进行微信配置
-        jsConfig(location.href);
+        jsConfig(location.href).then(()=>{
+          console.log('录音界面准备分享信息')
+          this.initShareConfig(type)
+        })
+        
       }
 
     }
     if (type == "wechat") {
-
       // 如果是微信
       this.allTime = 59;
+    }else {
+
     }
+    this.initShareConfig(type)
+  },
+  mounted(){
+    this.initSwiperContent()
   },
   beforeDestroy() {
     this.$store.commit("setUser", { prop: "playStatus", val: 1 });
@@ -461,7 +520,7 @@ export default {
 }
 .record_time {
   width: 100%;
-  margin-top: 22px;
+  margin: 11px 0;
   font-size: 16px;
   height: 35px;
   text-align: center;
@@ -610,6 +669,9 @@ export default {
   justify-content: space-around;
   .record_btn {
     width: 70px;
+    img {
+      width: 100%;
+    }
   }
   .start_btn,
   .complete_btn {
@@ -629,7 +691,6 @@ export default {
 .swiper_tip {
   width: 100%;
   text-align: right;
-  margin-bottom: 12px;
 }
 
 .swiper_part {
@@ -637,12 +698,21 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 320px;
   .swiper-prev-btn {
     margin-right: -20px;
+    img {
+      width: 100%;
+    }
   }
   .swiper-next-btn {
     margin-left: -20px;
+    img {
+      width: 100%;
+    }
+  }
+  .swiper-prev-btn,.swiper-next-btn {
+    position: relative;
+    z-index: 5;
   }
 }
 .out_swiper_container {
@@ -650,7 +720,7 @@ export default {
   flex-shrink: 0;
   width: 300px;
   height: 320px;
-  padding-top: 50px;
+  padding-top: 54px;
   background: url('../assets/img/swiper_bg.png') center no-repeat;
   background-size: contain;
   .scroll_text {
@@ -658,6 +728,14 @@ export default {
     right: -0px;
     top: 62px;
     width: 14px;
+  }
+}
+
+.play_my_audio_btn_container {
+  width: 148px;
+  margin: 0 auto;
+  .control_play_img {
+    width: 100%;
   }
 }
 </style>
@@ -681,5 +759,47 @@ export default {
   height: 260px;
 
 }
+.text-content {
+  font-size: 14px;
+  line-height: 1.5;
+  height: 100%;
+  overflow-y: auto;
+  text-align: justify;
+  .artIndex {
+    font-size: 16px;
+  }
+  .artIntro {
+
+  }
+  .artCommon {}
+  .artTitle {
+    margin: 18px 0 8px ;
+    text-align: center;
+    font-weight: bolder;
+  }
+  .artContent {
+
+  }
+  .detail_container {
+
+  }
+  .detail_p {
+    margin-top: 10px;
+  }
+}
+
+.type2_title {
+  padding: 28px 0;
+  font-size: 18px;
+}
+.type2_p {
+  font-size: 16px;
+  line-height: 1.3;
+  margin-bottom: 12px;
+  text-align: left;
+  text-indent: -26px;
+  margin-left: 26px;
+}
+
 
 </style>
