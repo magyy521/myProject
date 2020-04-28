@@ -213,7 +213,7 @@ export default {
       }
     }
     .info_line {
-      height: 14px;
+      height: 18px;
       line-height: 1.5;
       max-height: 50px;
       overflow: hidden;

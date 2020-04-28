@@ -14,7 +14,7 @@
           <swiper :options="swiperOption" ref="mySwiper">
             <!-- slides -->
           </swiper>
-          <p v-if="audioType == 1" class="scroll_text">滑动可显示更多</p>
+          <p  class="scroll_text">滑动可显示更多</p>
         </div>
         <div v-show="audioType == 1" class="swiper-next-btn" @click="swiperNext">
           <img src="../assets/img/swiper_next.png" alt="">
@@ -536,6 +536,7 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
+    width: 100%;
   }
 }
 .upload_params {
@@ -613,6 +614,7 @@ export default {
       vertical-align: middle;
       &.checked {
         background: url('../assets/img/pravice_check.png') center no-repeat;
+        background-size: contain;
       }
       
     }
@@ -728,6 +730,7 @@ export default {
     right: -0px;
     top: 62px;
     width: 14px;
+    line-height: 1.2;
   }
 }
 

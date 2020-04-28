@@ -9,7 +9,7 @@
         <div class="reward_content">
           <div v-for="(item,index) in adultsList" :key="index" class="reward_item">
             <div class="reward_head">
-              <img class="user_head" src="../assets/img/share_btn.png" alt="">
+              <img v-if="item.url" class="user_head" :src="item.url" alt="">
               <img class="reward_head_img" v-if="index == 0" src="../assets/img/reward_head1.png" alt="">
               <img class="reward_head_img"  v-if="index == 1" src="../assets/img/reward_head2.png" alt="">
               <img class="reward_head_img"  v-if="index == 2" src="../assets/img/reward_head3.png" alt="">
@@ -23,6 +23,7 @@
         <div class="reward_content">
           <div v-for="(item,index) in adultsList" :key="index" class="reward_item">
             <div class="reward_head">
+              <img v-if="item.url" class="user_head" :src="item.url" alt="">
               <img class="reward_head_img"  v-if="index == 0" src="../assets/img/reward_head1.png" alt="">
               <img class="reward_head_img"  v-if="index == 1" src="../assets/img/reward_head2.png" alt="">
               <img class="reward_head_img"  v-if="index == 2" src="../assets/img/reward_head3.png" alt="">
@@ -36,6 +37,7 @@
         <div class="reward_content">
           <div v-for="(item,index) in adultsList" :key="index" class="reward_item">
             <div class="reward_head">
+              <img v-if="item.url" class="user_head" :src="item.url" alt="">
               <img class="reward_head_img" src="../assets/img/reward_other.png" alt="">
             </div>
             <p class="reward_name"></p>

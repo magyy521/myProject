@@ -159,7 +159,7 @@
         <span>每日可投10票,当日剩余 {{ $store.state.voteQty }}票</span>
       </div>
       <div class="voice_container">
-        <div v-show="tabIndex == 1">
+        <div class="voice_list_item_container" v-show="tabIndex == 1">
           <div class="voice_item_container" v-for="(voice, index) in adultsVoiceList" :key="index">
             <div class="voice_index">
               <img v-if="index == 0" src="../assets/img/first.png" alt />
@@ -209,7 +209,7 @@
             <span slot="no-more">没有更多数据了</span>
           </infinite-loading>
         </div>
-        <div v-show="tabIndex == 2">
+        <div class="voice_list_item_container" v-show="tabIndex == 2">
           <div class="voice_item_container" v-for="(voice, index) in kidsVoiceList" :key="index">
             <div class="voice_index">
               <img v-if="index == 0" src="../assets/img/first.png" alt />
@@ -728,6 +728,9 @@ export default {
     overflow-y: scroll;
   }
 }
+.voice_list_item_container {
+  padding-top: 6px;
+}
 .voice_item_container {
   display: flex;
   width: 100%;
@@ -832,6 +835,7 @@ export default {
     background-size: contain;
     border-radius: 0;
     overflow: auto;
+    margin-top: -6px;
   }
 
 }
@@ -844,9 +848,7 @@ export default {
   }
 }
 
-img {
-  width: 100%;
-}
+
 .voice_index {
   display: flex;
   align-items: center;
@@ -861,12 +863,13 @@ img {
 .vote_btns {
   display: flex;
   align-items: flex-end;
+  .vote_btn {
+    width: 60px;
+    height: 20px;
+    margin-left: 10px;
+  }
 }
-.vote_btn {
-  width: 60px;
-  height: 20px;
-  margin-left: 10px;
-}
+
 .my_content {
   padding: 16px;
   box-sizing: border-box;
@@ -924,7 +927,7 @@ video {
 .pause_img,
 .play_img {
   position: absolute;
-  width: 20px;
+  height: 24px;
   left: 54%;
   top: 50%;
   transform: translate(-50%, -50%);
