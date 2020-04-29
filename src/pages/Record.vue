@@ -292,7 +292,7 @@ export default {
       // return
       // 将用户上传的音频参数传到数据库中去,包括音频地址,用户id,用户名称等等
       this.axios
-        .post(api.addAudio, {
+        .post(api.addAudio, JSON.stringify({
           userId: this.$store.state.userId,
           phone: this.phone,
           title: this.title,
@@ -301,6 +301,10 @@ export default {
           audioType: this.audioType,
           userType: this.userType,
           area: this.area,
+        }) ,{
+          headers: {
+            'Content-Type':'application/json'
+          }
         })
         .then(res => {
           this.step = 3;

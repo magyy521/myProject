@@ -81,12 +81,10 @@ export const fetchLizhiUserInfo = () => {
           },
           function(tokenRet) {
             let token = tokenRet.token;
-            console.log('kkkkkk',tokenRet)
             axios({
               method:'get',
-              url: 'https://oauthbiz.lizhi.fm/mapi/getLizhiUserInfo',
+              url: `https://oauthbiz.lizhi.fm/mapi/getLizhiUserInfo?token=${token}`,
               headers: {
-                'token':token
               }
             })
               // .get(
