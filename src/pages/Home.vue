@@ -169,8 +169,9 @@
               <span v-else>{{ index + 1 }}</span>
             </div>
             <div class="head_img_container" @click="playAudioList('audioAdults' + index)">
+              <div v-if='index == 0' class="head_img_default_first" ></div>
               <img v-if="voice.headUrl" class="head_img" :src="voice.headUrl" alt />
-              <div v-else :class="index == 0 ? 'head_img_default_first' :'head_img_default'" ></div>
+              <div v-else class="head_img_default" ></div>
               <img
                 v-show="voice.playStatus == 3 "
                 class="pause_img"
@@ -189,7 +190,7 @@
             <div class="audio_detail" @click="toMy(voice)">
               <p class="audio_userName">{{ voice.userName }}</p>
               <p class="audio_title">{{ voice.title }}</p>
-              <p class="audio_qty">{{ voice.votesNum }}票</p>
+              <p class="audio_qty">{{ voice.votesNum || 0 }}票</p>
             </div>
             <div class="vote_btns">
               <img
@@ -220,8 +221,10 @@
               <span v-else>{{ index + 1 }}</span>
             </div>
             <div class="head_img_container" @click="playAudioList('audioKids' + index)">
+              <div v-if='index == 0' class="head_img_default_first" ></div>
               <img v-if="voice.headUrl" class="head_img" :src="voice.headUrl" alt />
-              <div v-else :class="index == 0 ? 'head_img_default_first' :'head_img_default'" ></div>
+              <div v-else class="head_img_default" ></div>
+
               <img
                 v-show="voice.playStatus == 3 "
                 class="pause_img"
@@ -282,7 +285,7 @@
               </div>
               <div class="user_info">
                 <p class="info_line">用户名称 {{ $store.state.userName }}</p>
-                <p class="info_line">当前的票数 {{ $store.state.qty }}</p>
+                <p class="info_line">当前的票数 {{ $store.state.votesNum || 0}}</p>
                 <p class="info_line">排名 {{ $store.state.rank }}</p>
               </div>
             </div>
@@ -558,7 +561,7 @@ export default {
     // 获取我的音频
     getMyVoice() {
       this.axios
-        .get(`${api.getUserDetail}?userId=${this.$store.state.userId}&userName=${this.$store.state.userName}`)
+        .get(`${api.getUserDetail}?userId=${this.$store.state.userId}&userName=${this.$store.state.userName}&headUrl=${this.$store.state.headUrl}`)
         .then(res => {
           let data = res.data.data || {};
 
@@ -568,13 +571,16 @@ export default {
           this.$store.commit("setUser", { prop: "url", val: data.url });
           this.$store.commit("setUser", { prop: "title", val: data.title });
           // id是我的音频的id
-          this.$store.commit("setUser", { prop: "id", val: data.id });
+          this.$store.commit("setUser", { prop: "id", val: data.audioId });
           data.userName
             ? this.$store.commit("setUser", {
                 prop: "userName",
                 val: data.userName
               })
             : "";
+            
+          this.$store.commit("setUser", { prop: "votesNum", val: data.votesNum || 0 });
+
           this.$store.commit("setUser", { prop: "voteQty", val: data.voteQty || 0 });
           this.$store.commit("setUser", {
             prop: "rank",
@@ -585,6 +591,7 @@ export default {
 
     // 投票
     voteHandler(voteId, listType) {
+      console.log('voteId',voteId)
       if (this.$store.getters.activityOver) {
         this.$toast.center("活动已结束");
         return;
@@ -695,6 +702,7 @@ export default {
     userId: {
       immediate: true, // 这句重要
       handler(val) {
+        console.log('userId变动',val)
         if (val) {
           // 这里应该不需要了,在这里写上获取用户音频就可以了
           // this.getAdultsList(true);
@@ -862,8 +870,10 @@ export default {
     
   }
   .head_img_default_first {
-    width: 66px;
-    height: 72px;
+    max-width: auto;
+    max-height: auto;
+    width: 106px;
+    height: 92px;
     box-sizing: border-box;
     background: url('../assets/img/list_first.png') center bottom no-repeat;
     background-size: contain;

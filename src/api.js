@@ -1,6 +1,6 @@
 
 //  let qmUrl = '//kfc.octlr.com';
-// let  qmUrl = 'https://www.octlr.com/api';
+// let  qmUrl = 'http://www.octlr.com/api';
 
 let qmUrl = 'https://kfc.octlr.com/api'
 

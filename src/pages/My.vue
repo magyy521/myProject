@@ -27,7 +27,7 @@
       </div>
       <div class="user_info">
         <p class="info_line">用户名称 {{userName}}</p>
-        <p class="info_line">目前的票数 {{ qty }}</p>
+        <p class="info_line">目前的票数 {{ votesNum }}</p>
         <p class="info_line">排名 {{ rank }}</p>
       </div>
       <p class="info_line audio_title">标题名称 {{ title }}</p>
@@ -56,7 +56,7 @@ export default {
   data: function() {
     return {
       id: "",
-      qty: "",
+      votesNum: "",
       rank: "",
       title: "",
       url: "",
@@ -103,7 +103,7 @@ export default {
       this.axios.get(`${api.getAudioDetail}?id=${this.id}`).then(res => {
         let data = res.data.data;
         this.rank = data.rank;
-        this.qty = data.qty;
+        this.votesNum = data.votesNum;
         this.title = data.title;
         this.userName = data.userName;
         this.url = data.url;

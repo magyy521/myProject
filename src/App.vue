@@ -18,6 +18,20 @@ export default {
   methods: {
     appInit() {
 
+      // let userId = localStorage.getItem("userId");
+      // if (userId) {
+      //   this.$store.commit("setUser", { prop: "userId", val: userId });
+      // } else {
+      //   let newId = uuid.create(1);
+      //   this.$store.commit("setUser", { prop: "userId", val: newId.hex });
+      // }
+      // this.$store.commit("setUser", {
+      //     prop: "headUrl",
+      //     val: 'https://s.cn.bing.net/th?id=OJ.YYiBymhdI7904A&w=75&h=75&dpr=1.5&pid=MSNJVFeeds'
+      //   });
+      // this.initUser('https://s.cn.bing.net/th?id=OJ.YYiBymhdI7904A&w=75&h=75&dpr=1.5&pid=MSNJVFeeds');
+
+
       if (UA.wx && "wx" in window) {
         jsConfig(location.href);
         let userId = localStorage.getItem("userId");
