@@ -12,6 +12,6 @@ export const api = {
   // 未对接
   getAudioDetail: qmUrl + '/audio/detail',//根据id获取音频详情
   submitVote: qmUrl + '/vote/do',// 投票 
-  getReward: qmUrl + '/vote/getReward',// 获取中奖信息
+  getReward: qmUrl + '/audio/getTop3',// 获取中奖信息
 
 }

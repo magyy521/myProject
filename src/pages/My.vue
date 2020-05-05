@@ -132,7 +132,7 @@ export default {
       let type = UA.lz ? "lizhi" : UA.wx ? "wechat" : "chrome";
       if(type == "lizhi"){
         lz && lz.configShareUrl({
-          "url": `https://vodactivity.lizhifm.com/static/kfc/#/my?id=${this.id}`, //分享的url
+          "url": `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.id}`, //分享的url
           "title": "为我拉票", //分享标题
           "desc": "描述内容", // 分享的描述
           "image-url": "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg", //分享的图片
@@ -142,7 +142,7 @@ export default {
       if(type == "wechat") {
         wechatShare({
           title: '为我拉票',
-          link:  `https://vodactivity.lizhifm.com/static/kfc/#/my?id=${this.id}`,
+          link:  `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.id}`,
           desc: '描述内容',
           imgUrl: "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg",
         });

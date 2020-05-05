@@ -196,7 +196,8 @@ export default {
       this.swiper.slideNext()
     },
     share() {
-      this.$refs.mask.show();
+      this.$router.replace(`/my?voiceId=${this.$store.state.id}`);
+      // this.$refs.mask.show();
     },
     backHome() {
       this.$router.replace("/");
@@ -211,8 +212,8 @@ export default {
       });
     },
     endRecord() {
-      console.log('.....')
-      this.url='https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3'
+      // @todo 为测试,记得删掉
+      // this.url='https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3'
       this.NewReord.stop(true, (msg, data) => {
         if (msg) {
           this.$toast.center("网络繁忙，请刷新重试");
@@ -305,17 +306,15 @@ export default {
         .then(res => {
           this.step = 3;
           // 上传完成，去成功页面
-          // @todo 上传完成，返回的信息需要音频id，url等,这样可以分享
           console.log('信息提交成功',res)
-
-          if(res.data.data) {
+          if(res.data.data || res.data.data === 0) {
             // 录音上传的地址
             this.$store.commit("setUser", { prop: "url", val: this.url });
-            this.$store.commit("setUser", { prop: "id", val: res.data.data.id });
+            this.$store.commit("setUser", { prop: "id", val: res.data.data });
             this.$store.commit("setUser", { prop: "votesNum", val: 0 });
             this.$store.commit("setUser", { prop: "title", val: this.title });
           }
-          
+          console.log(this.$store)
         })
         .catch(err => {
           this.$toast.center("提交失败");
@@ -347,20 +346,16 @@ export default {
     // 音频播放到结束
     endAudio(){
       this.playStatus = 1;
-      
     },
     stopAudio() {
       let audio = this.$refs.myRadio;
       if (audio !== null) {
         let paused = audio.paused;
         if (paused) {
-
         } else {
           audio.pause(); // 这个就是暂停
           this.playStatus = 2;
-          
         }
-
       }
     },
     showPrivacy(){

@@ -514,7 +514,10 @@ export default {
           }
           if (this.adultsVoiceList.length >= res.data.data.total) {
             this.canLoadMoreAdults = false;
-            $state.complete();
+            if ($state) {
+              $state.complete();
+            }
+            
           }
         });
     },
@@ -654,7 +657,7 @@ export default {
         url: api.getReward,
       }).then(res=>{
         console.log('获取中奖信息',res)
-        if (res.data.data) {
+        if (res.data.data && res.data.data.adultList.length) {
           this.$refs.reward.initData(res.data.data);
         }
       })
@@ -681,10 +684,12 @@ export default {
   },
   created() {
     console.log("this.wechatUserInfo", this.wechatUserInfo);
-    
   },
   mounted(){
     this.showReward()
+    // if(this.$store.state.userId){
+    //   this.getMyVoice();
+    // }
   },
   watch: {
     userId: {

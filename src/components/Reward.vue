@@ -56,18 +56,6 @@ export default {
     return {
       rewardShow: false,
       adultsList:[
-        {
-          userName:'ppppp',
-          src: ''
-        },
-        {
-          userName:'ppppp',
-          src: ''
-        },
-        {
-          userName:'ppppp',
-          src: ''
-        },
       ],
       kidsList: [],
       othersList: [],
@@ -75,9 +63,9 @@ export default {
   },
   methods: {
     initData(data){
-      this.adultsList = data.adultsList;
-      this.kidsList = data.kidsList;
-      this.othersList = data.othersList;
+      this.adultsList = data.adultList;
+      this.kidsList = data.childrenList;
+      this.othersList = data.otherList;
       this.show()
     },
     show(){
