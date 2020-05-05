@@ -55,8 +55,7 @@ export default {
   data(){
     return {
       rewardShow: false,
-      adultsList:[
-      ],
+      adultsList:[],
       kidsList: [],
       othersList: [],
     }
