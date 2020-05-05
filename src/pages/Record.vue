@@ -23,13 +23,13 @@
       <div  class="record_time">
         <span v-show="timeLong > 0 && recording">00:{{ timeLongShow }}/01:00</span>
         <div class="play_my_audio_btn_container" v-show="recordComplete && timeLong >5" @click="playMyAudio" >
-          <img class="control_play_img" v-show="$store.state.playStatus == 1 || $store.state.playStatus == 2 " src="../assets/img/local_play_audio.png" alt="" />
-          <img class="control_play_img" v-show="$store.state.playStatus == 3" src="../assets/img/local_pause_audio.png" alt="" />
+          <img class="control_play_img" v-show="playStatus == 1 || playStatus == 2 " src="../assets/img/local_play_audio.png" alt="" />
+          <img class="control_play_img" v-show="playStatus == 3" src="../assets/img/local_pause_audio.png" alt="" />
         </div>
 
         <audio
         ref="myRadio"
-        :src="$store.state.url"
+        :src="url"
         controls="controls"
         @ended="endAudio()"
         class="star_head_audio"
@@ -151,12 +151,12 @@ import { api } from "../api";
 import { jsConfig } from "../assets/wechat_outh";
 import articleList from "../assets/articles"
 import areas from '../assets/areas'
-console.log('articleList',articleList)
 export default {
-  name: "home",
+  name: "record",
   components: { MaskC,swiper,swiperSlide,Privacy },
   data: function() {
     return {
+      playStatus: 1,
       audioType: 1,//上传的类型,1是阅读 ,2是故事
       provinceList: areas,
       step: 1,
@@ -211,17 +211,16 @@ export default {
       });
     },
     endRecord() {
+      console.log('.....')
+      this.url='https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3'
       this.NewReord.stop(true, (msg, data) => {
-        this.url = data;
-
         if (msg) {
           this.$toast.center("网络繁忙，请刷新重试");
+          console.log('endRecord 报错',msg)
           return;
         }
         console.log("录音上传的地址", data);
-        // 录音上传的地址
-        this.$store.state.url = data;
-        
+        this.url = data;
       });
     },
     // 点击开始录音的按钮,初始化一些数据
@@ -230,7 +229,6 @@ export default {
       this.timeLong = 0;
       this.recording = true;
       this.recordComplete = false;
-      this.$store.commit("setUser", { prop: "playStatus", val: 1 });
       this.startTime();
       this.startRecord();
     },
@@ -245,7 +243,6 @@ export default {
     stop() {
       window.clearInterval(this.timer);
       this.timer = null;
-
       this.recording = false;
       this.recordComplete = true;
       this.endRecord();
@@ -257,7 +254,7 @@ export default {
     },
     upload() {
       if (!this.agree) {
-        this.$toast.center("请同意隐私协议");
+        this.$toast.center("请同意隐私政策");
         return;
       }
       if (!this.realName) {
@@ -309,6 +306,16 @@ export default {
           this.step = 3;
           // 上传完成，去成功页面
           // @todo 上传完成，返回的信息需要音频id，url等,这样可以分享
+          console.log('信息提交成功',res)
+
+          if(res.data.data) {
+            // 录音上传的地址
+            this.$store.commit("setUser", { prop: "url", val: this.url });
+            this.$store.commit("setUser", { prop: "id", val: res.data.data.id });
+            this.$store.commit("setUser", { prop: "votesNum", val: 0 });
+            this.$store.commit("setUser", { prop: "title", val: this.title });
+          }
+          
         })
         .catch(err => {
           this.$toast.center("提交失败");
@@ -320,8 +327,8 @@ export default {
       window.scroll(0, 0);
     },
     playMyAudio() {
-      console.log('this.$store.state.url',this.$store.state.url)
-      if (!this.$store.state.url) {
+      console.log('this.url',this.url)
+      if (!this.url) {
         this.$toast.center("暂无音频");
         return false;
       }
@@ -330,16 +337,17 @@ export default {
         //检测播放是否已暂停.audio.paused 在播放器播放时返回false.
         if (audio.paused) {
           audio.play(); //audio.play();// 这个就是播放
-          this.$store.commit("setUser", { prop: "playStatus", val: 3 });
+          this.playStatus = 3;
         } else {
           audio.pause(); // 这个就是暂停
-          this.$store.commit("setUser", { prop: "playStatus", val: 2 });
+          this.playStatus = 2;
         }
       }
     },
     // 音频播放到结束
     endAudio(){
-      this.$store.commit("setUser", { prop: "playStatus", val: 1 });
+      this.playStatus = 1;
+      
     },
     stopAudio() {
       let audio = this.$refs.myRadio;
@@ -349,7 +357,8 @@ export default {
 
         } else {
           audio.pause(); // 这个就是暂停
-          this.$store.commit("setUser", { prop: "playStatus", val: 2 });
+          this.playStatus = 2;
+          
         }
 
       }
@@ -417,9 +426,6 @@ export default {
   mounted(){
     this.initSwiperContent()
   },
-  beforeDestroy() {
-    this.$store.commit("setUser", { prop: "playStatus", val: 1 });
-  }
 };
 </script>
 <style lang="less" scoped>

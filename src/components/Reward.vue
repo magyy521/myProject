@@ -14,33 +14,33 @@
               <img class="reward_head_img"  v-if="index == 1" src="../assets/img/reward_head2.png" alt="">
               <img class="reward_head_img"  v-if="index == 2" src="../assets/img/reward_head3.png" alt="">
             </div>
-            <p class="reward_name"></p>
+            <p class="reward_name">{{item.userName}}</p>
           </div>
         </div>
       </div>
       <div class="reward_type">
         <h3 class="reward_type_title">"人气好声音"少儿组</h3>
         <div class="reward_content">
-          <div v-for="(item,index) in adultsList" :key="index" class="reward_item">
+          <div v-for="(item,index) in kidsList" :key="index" class="reward_item">
             <div class="reward_head">
               <img v-if="item.url" class="user_head" :src="item.url" alt="">
               <img class="reward_head_img"  v-if="index == 0" src="../assets/img/reward_head1.png" alt="">
               <img class="reward_head_img"  v-if="index == 1" src="../assets/img/reward_head2.png" alt="">
               <img class="reward_head_img"  v-if="index == 2" src="../assets/img/reward_head3.png" alt="">
             </div>
-            <p class="reward_name"></p>
+            <p class="reward_name">{{item.userName}}</p>
           </div>
         </div>
       </div>
       <div class="reward_type reward_other_type">
         <h3 class="reward_type_title">"暖心好声音"获奖者</h3>
         <div class="reward_content">
-          <div v-for="(item,index) in adultsList" :key="index" class="reward_item">
+          <div v-for="(item,index) in othersList" :key="index" class="reward_item">
             <div class="reward_head">
               <img v-if="item.url" class="user_head" :src="item.url" alt="">
               <img class="reward_head_img" src="../assets/img/reward_other.png" alt="">
             </div>
-            <p class="reward_name"></p>
+            <p class="reward_name">{{item.userName}}</p>
           </div>
         </div>
       </div>
@@ -57,22 +57,29 @@ export default {
       rewardShow: false,
       adultsList:[
         {
-          username:'ppppp',
+          userName:'ppppp',
           src: ''
         },
         {
-          username:'ppppp',
+          userName:'ppppp',
           src: ''
         },
         {
-          username:'ppppp',
+          userName:'ppppp',
           src: ''
         },
-        
-      ]
+      ],
+      kidsList: [],
+      othersList: [],
     }
   },
   methods: {
+    initData(data){
+      this.adultsList = data.adultsList;
+      this.kidsList = data.kidsList;
+      this.othersList = data.othersList;
+      this.show()
+    },
     show(){
       this.rewardShow = true;
     },
@@ -136,6 +143,9 @@ export default {
         font-weight: normal;
       }
     .reward_item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       &:nth-of-type(1){
         order: 2;
         align-self: flex-start;
@@ -183,6 +193,19 @@ export default {
 
       }
     }
+
+    .reward_name {
+        display: block;
+        width: 80px;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 16px;
+        white-space: nowrap;
+        color: #9f2b44;
+        margin: 0;
+      }
+
     .reward_other_type {
       
       .reward_content {

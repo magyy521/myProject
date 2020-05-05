@@ -281,13 +281,13 @@
                 />
               </div>
               <div class="user_info">
-                <p class="info_line">用户名称:{{ $store.state.userName }}</p>
-                <p class="info_line">当前的票数: {{ $store.state.qty }}</p>
-                <p class="info_line">排名: {{ $store.state.rank }}</p>
+                <p class="info_line">用户名称 {{ $store.state.userName }}</p>
+                <p class="info_line">当前的票数 {{ $store.state.qty }}</p>
+                <p class="info_line">排名 {{ $store.state.rank }}</p>
               </div>
             </div>
 
-            <p class="info_line_title">标题名称: {{ $store.state.title }}</p>
+            <p class="info_line_title">标题名称  {{ $store.state.title }}</p>
             <div class="my_btns">
               <img
                 @click="shareHandler($store.state.id)"
@@ -649,7 +649,15 @@ export default {
     
     // 展示中奖信息
     showReward(){
-      this.$refs.reward.show();
+      this.axios({
+        method:'get',
+        url: api.getReward,
+      }).then(res=>{
+        console.log('获取中奖信息',res)
+        if (res.data.data) {
+          this.$refs.reward.initData(res.data.data);
+        }
+      })
     },
     
     changeTabIndex(tab){
@@ -676,7 +684,7 @@ export default {
     
   },
   mounted(){
-    // this.showReward()
+    this.showReward()
   },
   watch: {
     userId: {
