@@ -4,7 +4,14 @@
     <img  src="../assets/img/close_btn.png" alt="">
 
     </span> -->
-    <img class="rules_img" src="../assets/img/rules.png" alt="">
+    <div class="rules_content">
+      <img class="rules_bg" src="../assets/img/rules_bg.png" alt="">
+      <div class="rules_img_container">
+        <img class="rules_img" src="../assets/img/rules_text.png" alt="">
+      </div>
+      
+    </div>
+    
   </div>
 </template>
 
@@ -36,10 +43,34 @@ export default {
     top: 0;
     width: 100%;
     height: 100vh;
-    background-color: #131726;
+    // background-color: #131726;
     z-index: 100;
     display: flex;
     align-items: center;
+    background: #131726;
+    background-size: contain;
+    .rules_content {
+      position: relative;
+      width: 100%;
+      box-sizing: border-box;
+      height: 620px;
+      margin: 0 auto;
+      overflow: hidden;
+      .rules_bg {
+        width: 100%;
+        height: 620px;
+      }
+      .rules_img_container {
+        
+        height: 480px;
+        overflow: auto;
+        position: absolute;
+        left: 50%;
+        top: 90px;
+        width: 280px;
+        transform: translateX(-50%);
+      }
+    }
     .rules_close_btn {
       position: fixed;
       right: 0;
@@ -53,11 +84,7 @@ export default {
       }
     }
     .rules_img {
-        // position: fixed;
-        // left: 0;
-        // top: 0;
       width: 100%;
-      
     }
   }
 </style>

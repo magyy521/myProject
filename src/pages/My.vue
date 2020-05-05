@@ -26,11 +26,11 @@
         </audio>
       </div>
       <div class="user_info">
-        <p class="info_line">用户名称{{userName}}</p>
+        <p class="info_line">用户名称 {{userName}}</p>
         <p class="info_line">目前的票数 {{ qty }}</p>
         <p class="info_line">排名 {{ rank }}</p>
       </div>
-      <p class="info_line audio_title">作品标题 {{ title }}</p>
+      <p class="info_line audio_title">标题名称 {{ title }}</p>
       <div class="btns">
         <button  @click="shareHandler">
           <!-- 拉票 -->
@@ -49,6 +49,7 @@
 <script>
 import MaskC from "../components/MaskC";
 import { api } from "../api.js";
+import { UA } from "../assets/common";
 export default {
   name: "my",
   components: { MaskC },
@@ -126,10 +127,31 @@ export default {
     },
     myVideoEnded() {
       this.playStatus = 1;
+    },
+    initShareConfig(){
+      let type = UA.lz ? "lizhi" : UA.wx ? "wechat" : "chrome";
+      if(type == "lizhi"){
+        lz && lz.configShareUrl({
+          "url": `https://vodactivity.lizhifm.com/static/kfc/#/my?id=${this.id}`, //分享的url
+          "title": "为我拉票", //分享标题
+          "desc": "描述内容", // 分享的描述
+          "image-url": "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg", //分享的图片
+        })
+      }
+
+      if(type == "wechat") {
+        wechatShare({
+          title: '为我拉票',
+          link:  `https://vodactivity.lizhifm.com/static/kfc/#/my?id=${this.id}`,
+          desc: '描述内容',
+          imgUrl: "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg",
+        });
+      }
     }
   },
   created() {
     this.init();
+    this.initShareConfig()
   }
 };
 </script>
@@ -226,9 +248,9 @@ export default {
 }
 .back_home_btn {
   display: block;
-  margin: 22px auto 0;
-  width: 83px;
-  height: 36px;
+  margin: 20px auto 0;
+  width: 120px;
+  height: 40px;
   img {
     width: 100%;
   }

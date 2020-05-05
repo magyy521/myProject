@@ -7,10 +7,10 @@
       <img src="../assets/img/watch_detail_btn.png" alt />
     </div>
     <div class="stars_container">
-      <div class="star_item">
+      <div class="star_item" @click.stop="playAudioSingle('audioStar1')">
         <div class="star_head"></div>
         <div class="star_name">李小萌</div>
-        <div class="star_play_btn" @click.stop="playAudioSingle('audioStar1')">
+        <div class="star_play_btn" >
           <img
             v-show="audioObj['audioStar1'].playStatus == 3 "
             src="../assets/img/star_pause_btn.png"
@@ -21,10 +21,10 @@
           />
         </div>
       </div>
-      <div class="star_item">
+      <div class="star_item" @click.stop="playAudioSingle('audioStar2')">
         <div class="star_head"></div>
         <div class="star_name">王静文</div>
-        <div class="star_play_btn" @click.stop="playAudioSingle('audioStar2')">
+        <div class="star_play_btn" >
           <img
             v-show="audioObj['audioStar2'].playStatus == 3 "
             src="../assets/img/star_pause_btn.png"
@@ -148,6 +148,7 @@
 
     <!-- 音频列表 -->
     <div class="voice_list">
+      <div class="listen_more">滑动可收听更多作品哦</div>
       <!-- tab -->
       <div class="tab_container">
         <div class="tab_item" :class="tabIndex == 1 ? '  checked': ''" @click="changeTabIndex(1)"></div>
@@ -186,12 +187,13 @@
               <audio :ref="'audioAdults' + index" :src="voice.url"  @ended="endAudioList('adultsVoiceList',index)" controls="controls">您的手机不支持此格式</audio>
             </div>
             <div class="audio_detail" @click="toMy(voice)">
+              <p class="audio_userName">{{ voice.userName }}</p>
               <p class="audio_title">{{ voice.title }}</p>
-              <p class="audio_qty">{{ voice.qty }}</p>
+              <p class="audio_qty">{{ voice.votesNum }}票</p>
             </div>
             <div class="vote_btns">
               <img
-                @click="voteHandler(voice.id,index)"
+                @click="voteHandler(voice.id,'adultsVoiceList')"
                 class="vote_btn"
                 src="../assets/img/vote_btn.png"
                 alt
@@ -206,7 +208,7 @@
           </div>
 
           <infinite-loading @infinite="infiniteHandlerAdults">
-            <span slot="no-more">没有更多数据了</span>
+            <span class="no_more_text" slot="no-more">没有更多数据了</span>
           </infinite-loading>
         </div>
         <div class="voice_list_item_container" v-show="tabIndex == 2">
@@ -236,12 +238,13 @@
               <audio :ref="'audioKids' + index" :src="voice.url" @ended="endAudioList('kidsVoiceList',index)" controls="controls">您的手机不支持此格式</audio>
             </div>
             <div class="audio_detail" @click="toMy(voice)">
+              <p class="audio_userName">{{ voice.userName }}</p>
               <p class="audio_title">{{ voice.title }}</p>
-              <p class="audio_qty">{{ voice.qty }}</p>
+              <p class="audio_qty">{{ voice.votesNum }}票</p>
             </div>
             <div class="vote_btns">
               <img
-                @click="voteHandler(voice.id,index)"
+                @click="voteHandler(voice.id,'kidsVoiceList')"
                 class="vote_btn"
                 src="../assets/img/vote_btn.png"
                 alt
@@ -258,13 +261,13 @@
           </div>
 
           <infinite-loading @infinite="infiniteHandlerKids">
-            <span slot="no-more">没有更多数据了</span>
+            <span class="no_more_text" slot="no-more">没有更多数据了</span>
           </infinite-loading>
         </div>
         <div v-show="tabIndex == 3">
           <div class="my_content">
             <div class="header_part">
-              <div class="head_content" @click="playAudioSingle('audioMy')">
+              <div class="head_content" @click="playMyAudio">
                 <img v-if="$store.state.headUrl" class="head_img" :src="$store.state.headUrl" alt />
                 <img
                   v-show="audioObj['audioMy'].playStatus == 3"
@@ -278,14 +281,14 @@
                 />
               </div>
               <div class="user_info">
-                <p class="info_line">用户名称{{ $store.state.userName }}</p>
-                <p class="info_line">当前的票数 {{ $store.state.qty }}</p>
-                <p class="info_line">排名 {{ $store.state.rank }}</p>
+                <p class="info_line">用户名称:{{ $store.state.userName }}</p>
+                <p class="info_line">当前的票数: {{ $store.state.qty }}</p>
+                <p class="info_line">排名: {{ $store.state.rank }}</p>
               </div>
             </div>
 
-            <p class="info_line">标题名称 {{ $store.state.title }}</p>
-            <div class="btns">
+            <p class="info_line_title">标题名称: {{ $store.state.title }}</p>
+            <div class="my_btns">
               <img
                 @click="shareHandler($store.state.id)"
                 class="vote_btn"
@@ -333,6 +336,16 @@ import Intro from "../components/Intro";
 import Reward from "../components/Reward";
 import InfiniteLoading from "vue-infinite-loading";
 import { api } from "../api";
+
+import lixiaomengAudio from '../assets/audio/lixiaomeng_audio.mp3'
+import wangjingwenAudio from '../assets/audio/wangjingwen_audio.mp3'
+import kfcAudio from '../assets/audio/kfc_audio.mp3'
+import littleBirdAudio from '../assets/audio/little_bird_audio.mp3'
+import nanxiaodianAudio from '../assets/audio/nanxiaodian_audio.mp3'
+import yingyingAudio from '../assets/audio/yingying_audio.mp3'
+import xiayiAudio from '../assets/audio/xiayi_audio.mp3'
+import renxiaojunAudio from '../assets/audio/renxiaojun_audio.mp3'
+
 export default {
   name: "home",
   components: { MaskC, Rules, Intro, Reward, InfiniteLoading },
@@ -349,48 +362,39 @@ export default {
       canLoadMoreKids: true,
       audioObj: {
         audioStar1: {
-          url:
-            "https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3",
+          url: lixiaomengAudio,
           playStatus: 1 // 3播放 2暂停
         },
         audioStar2: {
-          url:
-            "https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3",
+          url: wangjingwenAudio,
           playStatus: 1 // 3播放 2暂停
         },
         audioStar3: {
-          url:
-            "https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3",
+          url: kfcAudio,
           playStatus: 1 // 3播放 2暂停
         },
         audioStar4: {
-          url:
-            "https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3",
+          url: littleBirdAudio,
           playStatus: 1 // 3播放 2暂停
         },
         audioStar5: {
-          url:
-            "https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3",
+          url: nanxiaodianAudio,
           playStatus: 1 // 3播放 2暂停
         },
         audioStar6: {
-          url:
-            "https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3",
+          url: yingyingAudio,
           playStatus: 1 // 3播放 2暂停
         },
         audioStar7: {
-          url:
-            "https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3",
+          url: xiayiAudio,
           playStatus: 1 // 3播放 2暂停
         },
         audioStar8: {
-          url:
-            "https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3",
+          url: renxiaojunAudio,
           playStatus: 1 // 3播放 2暂停
         },
         audioMy: {
-          url:
-            "https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3",
+          url: '',
           playStatus: 1 // 3播放 2暂停
         }
       }
@@ -418,6 +422,7 @@ export default {
     playAudioSingle(refName) {
       let audio = this.$refs[refName];
       audio = audio[0];
+      console.log('audio',audio)
       if (audio !== null) {
         //检测播放是否已暂停.audio.paused 在播放器播放时返回false.
         let paused = audio.paused;
@@ -432,6 +437,14 @@ export default {
           voiceItem.playStatus = 2;
         }
       }
+    },
+    playMyAudio(){
+      if(this.audioObj.audioMy.url){
+        this.playAudioSingle('audioMy')
+      }else {
+        this.$toast.center("暂无音频");
+      }
+      
     },
     // 播放列表音频
     playAudioList(refName) {
@@ -504,7 +517,6 @@ export default {
             $state.complete();
           }
         });
-      this.adultsVoiceList= [{url: 'https://cdn.lizhi.fm/city_public/2019/12/02/2774705375708425262.mp3',title:'', playStatus: 1}];
     },
 
     // 获取儿童音频列表
@@ -538,7 +550,6 @@ export default {
             
           }
         });
-      this.kidsVoiceList= [{url: 'https://cdn.lizhi.fm/city_public/2019/12/02/2774705375708425262.mp3',title:'', playStatus: 1}];
     },
 
     // 获取我的音频
@@ -548,9 +559,12 @@ export default {
         .then(res => {
           let data = res.data.data || {};
 
+          this.audioObj.audioMy.url = data.url || ''
+
           this.$store.commit("setUser", { prop: "phone", val: data.phone });
           this.$store.commit("setUser", { prop: "url", val: data.url });
           this.$store.commit("setUser", { prop: "title", val: data.title });
+          // id是我的音频的id
           this.$store.commit("setUser", { prop: "id", val: data.id });
           data.userName
             ? this.$store.commit("setUser", {
@@ -558,26 +572,16 @@ export default {
                 val: data.userName
               })
             : "";
-          this.$store.commit("setUser", { prop: "qty", val: data.qty || 0 });
-          this.$store.commit("setUser", {
-            prop: "rewardFlag",
-            val: data.rewardFlag
-          });
+          this.$store.commit("setUser", { prop: "voteQty", val: data.voteQty || 0 });
           this.$store.commit("setUser", {
             prop: "rank",
             val: data.rank
           });
-
-          //  "phone": "string",
-          //   "qty": 0,
-          //   "rewardFlag": true,
-          //   "userName": "string"
-          // 我的音频详情
         });
     },
 
     // 投票
-    voteHandler(voteId, index) {
+    voteHandler(voteId, listType) {
       if (this.$store.getters.activityOver) {
         this.$toast.center("活动已结束");
         return;
@@ -586,14 +590,18 @@ export default {
         this.$toast.center("今日票数已经用完");
         return;
       }
+      if(!voteId) {
+        this.$toast.center("暂无音频");
+        return;
+      }
       this.axios({
         method:'get',
         url:`${api.submitVote}?audioId=${voteId}&userId=${this.$store.state.userId}`,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       })
-      // .get()
         .then(res => {
-          if (res.data.code == 200) {
+          console.log('res',res)
+          if (res.data.data == 'ok') {
             this.$toast.center("投票成功");
             this.$store.commit("setUser", {
               prop: "voteQty",
@@ -603,8 +611,12 @@ export default {
                   : 0
             });
 
-            this.getAdultsList(true);
-            this.getKidsList(true);
+            if(listType == 'kidsVoiceList') {
+              this.getKidsList(true);
+            }else if(listType ==  'adultsVoiceList'){
+              this.getAdultsList(true);
+            }
+            
             this.getMyVoice();
           }
         });
@@ -721,11 +733,19 @@ export default {
   background-size: cover;
   background-repeat: no-repeat;
   border-radius: 25px;
-  background-color: rgba(243, 138, 158, 0.8509803921568627);
 
   .voice_container {
-    height: 250px;
+    height: 320px;
     overflow-y: scroll;
+  }
+  .listen_more {
+    position: absolute;
+    top: 40px;
+    right: -20px;
+    width: 16px;
+    color: #c70025;
+    font-size: 12px;
+    line-height: 1.3;
   }
 }
 .voice_list_item_container {
@@ -741,6 +761,7 @@ export default {
   .audio_detail {
     flex: 1;
     max-width: 70px;
+    .audio_userName,
     .audio_title,
     .audio_qty {
       height: 15px;
@@ -894,11 +915,14 @@ export default {
     margin-bottom: 10px;
     border: 1px solid #c70025;
     background-color: #fff;
+    .head_img {
+      width: 100%;
+    }
   }
   .user_info {
     overflow: hidden;
   }
-  .btns {
+  .my_btns {
     display: flex;
     justify-content: space-between;
     img {
@@ -913,6 +937,10 @@ export default {
     line-height: 1.5;
     margin-bottom: 5px;
   }
+  .info_line_title {
+    .info_line;
+    margin: 30px 10px ;
+  }
 }
 video {
   width: 0;
@@ -922,6 +950,9 @@ video {
   height: 50px;
   position: absolute;
   bottom: 0;
+  img {
+    width: 100%;
+  }
 }
 
 .pause_img,
@@ -979,6 +1010,9 @@ audio {
 .break_line_container {
   width: 100%;
   margin: 24px 0;
+  img {
+    width: 100%;
+  }
 }
 
 .kfc_header_container {
@@ -1071,6 +1105,10 @@ audio {
     }
   }
 }
+.no_more_text {
+  color: #fff;
+}
+
 </style>
 
 

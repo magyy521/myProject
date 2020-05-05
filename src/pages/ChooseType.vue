@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import { jsConfig, wechatShare } from "../assets/wechat_outh";
 export default {
     name: 'chooseType',
     data(){
@@ -28,21 +27,7 @@ export default {
         },
     },
     created(){
-        // wechatShare({
-        //   title: '为我拉票hhh',
-        //   link: 'https://vodactivity.lizhifm.com/static/kfc/#/record?type=2',
-        //   desc: '描述内容',
-        //   imgUrl: "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg",
-        // });
-//         lz && lz.shareUrl({
-//             "url": "http://www.lizi.fm/xxxx", //分享的url
-//   "title": "为XXX拉票", //分享标题
-//   "desc": "我正在为XXX拉票，大家帮帮我吧", // 分享的描述
-//   "image-url": "http://cdn.lizhi.fm/images/xxxxx.png", //分享的图片
-// //   "platforms": [22, 23] // 分享的平台（可选，若不指定则由客户端显示全部可分享的平台）
-//         })
     }
-    
 
 }
 </script>

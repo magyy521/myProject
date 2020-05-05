@@ -7,7 +7,7 @@
 <script>
 import Vue from "vue";
 import { UA } from "./assets/common";
-import { jsConfig, wechatShare } from "./assets/wechat_outh";
+import { jsConfig } from "./assets/wechat_outh";
 import axios from "axios";
 import { lzLogin } from "./assets/lzlogin";
 import { api } from "./api";
@@ -20,13 +20,6 @@ export default {
 
       if (UA.wx && "wx" in window) {
         jsConfig(location.href);
-        wechatShare({
-          title: '为我拉票',
-          link: 'https://vodactivity.lizhifm.com/static/kfc/#/home',
-          desc: '描述内容',
-          imgUrl: "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg",
-        });
-        this.$store.commit("setNavi", "wx");
         let userId = localStorage.getItem("userId");
         if (userId) {
           this.$store.commit("setUser", { prop: "userId", val: userId });
@@ -48,7 +41,6 @@ export default {
       }
       if (UA.lz) {
         this.asyncScript();
-        this.$store.commit("setNavi", "lz");
       }
     },
     asyncScript() {

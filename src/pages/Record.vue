@@ -46,7 +46,7 @@
 
         <button  v-if="recording" @click="stop" class="record_btn complete_btn ">
           <img src="../assets/img/complete_btn.png" alt="完成" />
-          <p class="btn_text">正在录音...</p>
+          <p class="btn_text">完成录音</p>
         </button>
 
         <button v-if="recordComplete" class="record_btn restart_btn" @click="start">
@@ -56,7 +56,7 @@
 
         <button v-if="recordComplete && timeLong >5" class="record_btn record_next_btn"  @click="next">
           <img src="../assets/img/next_btn.png" alt="下一步" />
-          <p class="btn_text">完成</p>
+          <p class="btn_text">下一步</p>
         </button>
       </div>
     </div>
@@ -175,6 +175,7 @@ export default {
       allTime: 60, //录音总计时长
       timer: null,
       swiperOption: {
+        loop : true,
         pagination: {
           el: ".swiper-pagination",
           clickable: true
@@ -203,7 +204,6 @@ export default {
     // 真正开始录音
     startRecord() {
       console.log("record内部开始录音啦");
-      console.log(this.NewReord);
       this.NewReord.start(err => {
         if (err) {
           this.$toast.center(err);
@@ -278,7 +278,6 @@ export default {
       }
 
       let state = this.$store.state;
-      // let headUrlObj = UA.wx ? { headUrl: this.wechatUserInfo.headimgurl } : {};
       let headUrlObj = {};
       if (!state.userId) {
         let newId = uuid.create(1);
@@ -309,6 +308,7 @@ export default {
         .then(res => {
           this.step = 3;
           // 上传完成，去成功页面
+          // @todo 上传完成，返回的信息需要音频id，url等,这样可以分享
         })
         .catch(err => {
           this.$toast.center("提交失败");
@@ -322,7 +322,6 @@ export default {
     playMyAudio() {
       console.log('this.$store.state.url',this.$store.state.url)
       if (!this.$store.state.url) {
-        console.log("没有地址");
         this.$toast.center("暂无音频");
         return false;
       }
@@ -385,39 +384,8 @@ export default {
         dom = type2Dom
       }
       
-      
-      
       this.swiper.appendSlide(dom)
     },
-    initShareConfig(type){
-      if(type == "lizhi"){
-        lz && lz.shareUrl({
-          "url": "https://vodactivity.lizhifm.com/static/kfc/#/home", //分享的url
-          "title": "为XXX拉票", //分享标题
-          "desc": "我正在为XXX拉票，大家帮帮我吧", // 分享的描述
-          "image-url": "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg", //分享的图片
-        //   "platforms": [22, 23] // 分享的平台（可选，若不指定则由客户端显示全部可分享的平台）
-        })
-
-        lz && lz.configShareUrl({
-          "url": "https://vodactivity.lizhifm.com/static/kfc/#/home", //分享的url
-          "title": "为XXX拉票", //分享标题
-          "desc": "我正在为XXX拉票，大家帮帮我吧", // 分享的描述
-          "image-url": "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg", //分享的图片
-        })
-        console.log('lz && lz.configShareUrl',lz && lz.configShareUrl)
-
-      }
-
-      if(type == "wechat") {
-        wechatShare({
-          title: '为我拉票',
-          link: 'https://vodactivity.lizhifm.com/static/kfc/#/home',
-          desc: '描述内容',
-          imgUrl: "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg",
-        });
-      }
-    }
   },
   computed: {
     swiper() {
@@ -426,10 +394,8 @@ export default {
     timeLongShow(){
       return this.timeLong > 9 ? String(this.timeLong) : `0${this.timeLong}`
     },
-    
   },
   created() {
-    console.log('录音界面created')
     let audioType = this.$route.query.type
     if(this.$route.query.type) {
       this.audioType = audioType
@@ -440,20 +406,13 @@ export default {
       if(!(navigator.userAgent.indexOf('iPhone') > -1)){
         // 非苹果系统,那么重新进行微信配置
         jsConfig(location.href).then(()=>{
-          console.log('录音界面准备分享信息')
-          this.initShareConfig(type)
         })
-        
       }
-
     }
     if (type == "wechat") {
       // 如果是微信
       this.allTime = 59;
-    }else {
-
     }
-    this.initShareConfig(type)
   },
   mounted(){
     this.initSwiperContent()
@@ -470,7 +429,7 @@ export default {
   align-items: center;
   width: 100%;
   height: 100vh;
-  padding: 16px;
+  padding: 10px;
   box-sizing: border-box;
   background-size: cover;
   background-image: url("../assets/img/record_bg.png");
@@ -524,7 +483,10 @@ export default {
 }
 .record_time {
   width: 100%;
-  margin: 11px 0;
+  margin: -6px 0 10px ;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 16px;
   height: 35px;
   text-align: center;
@@ -612,19 +574,18 @@ export default {
     .pravicy_checkbox {
       display: inline-block;
       background: url('../assets/img/pravice_nocheck.png') center no-repeat;
-      width: 20px;
-      height: 20px;
+      background-size: contain;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       vertical-align: middle;
       &.checked {
-        background: url('../assets/img/pravice_check.png') center no-repeat;
-        background-size: contain;
+        background-image: url('../assets/img/pravice_check.png');
       }
-      
     }
     input {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       opacity: 0;
     }
   }
@@ -705,13 +666,17 @@ export default {
   align-items: center;
   width: 100%;
   .swiper-prev-btn {
-    margin-right: -20px;
+    width: 46px;
+    height: 46px;
+    margin-right: -24px;
     img {
       width: 100%;
     }
   }
   .swiper-next-btn {
-    margin-left: -20px;
+    width: 46px;
+    height: 46px;
+    margin-left: -24px;
     img {
       width: 100%;
     }
@@ -724,15 +689,15 @@ export default {
 .out_swiper_container {
   position: relative;
   flex-shrink: 0;
-  width: 300px;
-  height: 320px;
+  width: 320px;
+  height: 300px;
   padding-top: 54px;
   background: url('../assets/img/swiper_bg.png') center no-repeat;
   background-size: contain;
   .scroll_text {
     position: absolute;
     right: -0px;
-    top: 62px;
+    top: 42px;
     width: 14px;
     line-height: 1.2;
   }
@@ -763,7 +728,7 @@ export default {
 }
 .swiper-container {
   width: 220px;
-  height: 260px;
+  height: 250px;
 
 }
 .text-content {
@@ -796,7 +761,7 @@ export default {
 }
 
 .type2_title {
-  padding: 28px 0;
+  padding: 20px 0;
   font-size: 18px;
 }
 .type2_p {
