@@ -157,7 +157,7 @@
       </div>
       <div class="voice_info">
         <span>排行榜</span>
-        <span>每日可投10票,当日剩余 {{ $store.state.voteQty }}票</span>
+        <span>每日可投10票,当日剩余{{ $store.state.voteQty }}票</span>
       </div>
       <div class="voice_container">
         <div class="voice_list_item_container" v-show="tabIndex == 1">

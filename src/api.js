@@ -1,7 +1,8 @@
 
 //  let qmUrl = '//kfc.octlr.com';
-let  qmUrl = 'https://www.octlr.com/api';
+// let  qmUrl = 'https://www.octlr.com/api';
 
+let qmUrl = 'https://kfc.octlr.com/api'
 
 export const api = {
   // 已对接

@@ -249,7 +249,11 @@ export default {
       this.endRecord();
     },
     next() {
-      console.log("下一步");
+      console.log("点击下一步");
+      if(!this.url){
+        this.$toast.center("暂无音频,请重新录音");
+        return;
+      }
       this.stopAudio();
       this.step = 2;
     },
