@@ -175,6 +175,7 @@ export default {
       allTime: 60, //录音总计时长
       timer: null,
       swiperOption: {
+        initialSlide: 1,
         loop : true,
         pagination: {
           el: ".swiper-pagination",
@@ -393,6 +394,7 @@ export default {
       }
       
       this.swiper.appendSlide(dom)
+      // this.swiper.slideTo(1)
     },
   },
   computed: {

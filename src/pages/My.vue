@@ -192,7 +192,8 @@ export default {
       background-color: #fff;
       border: 1px solid #c70025;
       .head_img {
-        width: 100%;
+        width: 70px;
+        height: 70px;
         border-radius: 50%;
         overflow: hidden;
       }

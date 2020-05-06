@@ -625,6 +625,9 @@ export default {
               this.getKidsList(true);
             }else if(listType ==  'adultsVoiceList'){
               this.getAdultsList(true);
+            }else {
+              this.getKidsList(true);
+              this.getAdultsList(true);
             }
             
             this.getMyVoice();
@@ -870,10 +873,10 @@ export default {
     
   }
   .head_img_default_first {
-    max-width: auto;
-    max-height: auto;
-    width: 106px;
-    height: 92px;
+    max-width: initial;
+    max-height: initial;
+    width: 82px;
+    height: 70px;
     box-sizing: border-box;
     background: url('../assets/img/list_first.png') center bottom no-repeat;
     background-size: contain;
