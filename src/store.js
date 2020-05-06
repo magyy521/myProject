@@ -27,7 +27,7 @@ export default new Vuex.Store({
   },
   mutations: {
     setUser(state, params) {
-      console.log("setUser", params);
+      // console.log("setUser", params);
       // 为什么不用这个...
       // Object.keys(params).forEach(v=>{
       //   state[v] = params[v]

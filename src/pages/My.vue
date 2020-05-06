@@ -26,11 +26,11 @@
         </audio>
       </div>
       <div class="user_info">
-        <p class="info_line">用户名称 {{userName}}</p>
-        <p class="info_line">目前的票数 {{ votesNum }}</p>
+        <p class="info_line">{{userName}}</p>
+        <p class="info_line">当前票数：{{ votesNum }}</p>
         <p class="info_line">排名 {{ rank }}</p>
       </div>
-      <p class="info_line audio_title">标题名称 {{ title }}</p>
+      <p class="info_line audio_title">{{ title }}</p>
       <div class="btns">
         <button  @click="shareHandler">
           <!-- 拉票 -->
@@ -50,6 +50,7 @@
 import MaskC from "../components/MaskC";
 import { api } from "../api.js";
 import { UA } from "../assets/common";
+import { wechatShare } from "../assets/wechat_outh";
 export default {
   name: "my",
   components: { MaskC },
@@ -93,7 +94,19 @@ export default {
     },
     // 分享
     shareHandler() {
-      this.$refs.mask.show();
+      let type = UA.lz ? "lizhi" : UA.wx ? "wechat" : "chrome";
+      if(type == "lizhi") {
+        console.log('调起分享',lz)
+        lz && lz.shareUrl({
+          title: '“爱暖童心，声声不息”小候鸟关爱季',
+          link:  `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.id}`,
+          desc: '荔枝携手肯德基小候鸟基金共同发起“爱暖童心，声声不息”公益活动，马上参与，一起为爱留声，赢取精美礼品，更有机会与大咖同行，参与广播剧录制，来自@荔枝APP 网页链接（https://vodactivity.lizhifm.com/static/kfc/#/home',
+          imgUrl: "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg",
+        })
+      }else {
+        this.$refs.mask.show();
+      }
+      
     },
     backHome() {
       this.$router.replace("/");
@@ -132,18 +145,18 @@ export default {
       let type = UA.lz ? "lizhi" : UA.wx ? "wechat" : "chrome";
       if(type == "lizhi"){
         lz && lz.configShareUrl({
-          "url": `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.id}`, //分享的url
-          "title": "为我拉票", //分享标题
-          "desc": "描述内容", // 分享的描述
-          "image-url": "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg", //分享的图片
+          title: '“爱暖童心，声声不息”小候鸟关爱季',
+          link:  `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.id}`,
+          desc: '为爱留声，赢取精美奖品，更有机会参与广播剧录制',
+          imgUrl: "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg",
         })
       }
 
       if(type == "wechat") {
         wechatShare({
-          title: '为我拉票',
+          title: '“爱暖童心，声声不息”小候鸟关爱季',
           link:  `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.id}`,
-          desc: '描述内容',
+          desc: '为爱留声，赢取精美奖品，更有机会参与广播剧录制',
           imgUrl: "https://mkactivity.lizhifm.com/static/2019_12_car_vote/share_img.jpg",
         });
       }
@@ -166,7 +179,7 @@ export default {
   display: flex;
   flex-direction: column;
   background: url("../assets/img/my_bg.png") top center no-repeat;
-  background-size: contain;
+  background-size: 100% auto;
 
   .my_content {
     width: 335px;

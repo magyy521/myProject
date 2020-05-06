@@ -41,7 +41,7 @@ export const wechatOauth = (link, cb) => {
     let default_params = localStorage.getItem("origin_url");
     let openid = getQueryString("openid");
     axios
-      .get(`//oauthbiz.lizhi.fm/weixin/loadUser?tag=brand&openid=${openid}`)
+      .get(`https://oauthbiz.lizhi.fm/weixin/loadUser?tag=brand&openid=${openid}`)
       .then(resp => {
         localStorage.setItem("userInfo", JSON.stringify(resp.data.data));
         if (default_params) {
@@ -92,12 +92,14 @@ export const fetchLizhiUserInfo = () => {
               // )
               .then(resp => {
                 console.log('获取用户信息',resp)
-                if (resp.data.rCode == 0) {
+                if (resp.data.data) {
                   let userInfo = {
-                    id: ret.id,
-                    nickname: ret.name,
-                    headImg: resp.data.data.head
+                    id: resp.data.data.lizhiUserId,
+                    nickname: resp.data.data.nickName,
+                    // headImg: resp.data.data.head,
+                    headImg: resp.data.data.portrait
                   };
+                  localStorage.removeItem("lzUser");
                   localStorage.setItem("lzUser", JSON.stringify(userInfo));
                   resolve(userInfo);
                 }

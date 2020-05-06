@@ -60,9 +60,9 @@ export default {
     asyncScript() {
       let that = this;
       fetchLizhiUserInfo().then(res => {
-        console.log("lizhi_userInfo", res);
+        console.log("lizhi_userInfo...........", res);
         that.$store.commit("setUser", { prop: "userId", val: res.id });
-        that.$store.commit("setUser", { prop: "headUrl", val: res.headImg });
+        that.$store.commit("setUser", { prop: "headUrl", val: res.headImg  });
         that.$store.commit("setUser", { prop: "userName", val: res.nickname });
         that.initUser(res.headImg);
         // 荔枝登录的话,本地不需要存userid,因为进来的用户一定有userId,把这个userid存到服务器上就行了

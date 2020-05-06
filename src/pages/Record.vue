@@ -1,6 +1,6 @@
 <template>
   <div class="record_page">
-    <div v-if="step != 3" class="choose_back_btn" @click="backHome"></div>
+    <div v-if="step != 3" class="choose_back_btn" @click="backChoose"></div>
 
     <div v-if="step == 1" class="step1_container">
       <div  class="swiper_tip">
@@ -14,7 +14,7 @@
           <swiper :options="swiperOption" ref="mySwiper">
             <!-- slides -->
           </swiper>
-          <p  class="scroll_text">滑动可显示更多</p>
+          <p  class="scroll_text">滑动显示更多文字</p>
         </div>
         <div v-show="audioType == 1" class="swiper-next-btn" @click="swiperNext">
           <img src="../assets/img/swiper_next.png" alt="">
@@ -176,7 +176,6 @@ export default {
       timer: null,
       swiperOption: {
         initialSlide: 1,
-        loop : true,
         pagination: {
           el: ".swiper-pagination",
           clickable: true
@@ -199,6 +198,9 @@ export default {
     share() {
       this.$router.replace(`/my?voiceId=${this.$store.state.id}`);
       // this.$refs.mask.show();
+    },
+    backChoose(){
+      this.$router.back()
     },
     backHome() {
       this.$router.replace("/");
@@ -438,8 +440,8 @@ export default {
   height: 100vh;
   padding: 10px;
   box-sizing: border-box;
+  background: url("../assets/img/record_bg.png") center top no-repeat;
   background-size: cover;
-  background-image: url("../assets/img/record_bg.png");
   .choose_back_btn {
     width: 90px;
     height: 40px;
@@ -691,6 +693,7 @@ export default {
   .swiper-prev-btn,.swiper-next-btn {
     position: relative;
     z-index: 5;
+    margin-top: 20px;
   }
 }
 .out_swiper_container {
@@ -707,6 +710,7 @@ export default {
     top: 42px;
     width: 14px;
     line-height: 1.2;
+    font-size: 12px;
   }
 }
 

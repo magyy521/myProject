@@ -148,7 +148,7 @@
 
     <!-- 音频列表 -->
     <div class="voice_list">
-      <div class="listen_more">滑动可收听更多作品哦</div>
+      <div v-show="tabIndex != 3" class="listen_more">滑动可收听更多作品哦</div>
       <!-- tab -->
       <div class="tab_container">
         <div class="tab_item" :class="tabIndex == 1 ? '  checked': ''" @click="changeTabIndex(1)"></div>
@@ -157,7 +157,7 @@
       </div>
       <div class="voice_info">
         <span>排行榜</span>
-        <span>每日可投10票,当日剩余{{ $store.state.voteQty }}票</span>
+        <span>每日可投10票，当日剩余{{ $store.state.voteQty }}票</span>
       </div>
       <div class="voice_container">
         <div class="voice_list_item_container" v-show="tabIndex == 1">
@@ -284,13 +284,13 @@
                 />
               </div>
               <div class="user_info">
-                <p class="info_line">用户名称 {{ $store.state.userName }}</p>
-                <p class="info_line">当前的票数 {{ $store.state.votesNum || 0}}</p>
+                <p class="info_line">{{ $store.state.userName }} </p>
+                <p class="info_line">当前票数：{{ $store.state.votesNum || 0}}</p>
                 <p class="info_line">排名 {{ $store.state.rank }}</p>
               </div>
             </div>
 
-            <p class="info_line_title">标题名称  {{ $store.state.title }}</p>
+            <p class="info_line_title">{{ $store.state.title }}</p>
             <div class="my_btns">
               <img
                 @click="shareHandler($store.state.id)"
@@ -671,6 +671,7 @@ export default {
           this.$refs.reward.initData(res.data.data);
         }
       })
+      // this.$refs.reward.initData({});
     },
     
     changeTabIndex(tab){
@@ -744,7 +745,8 @@ export default {
 
 .voice_list_title {
   margin-top: 13px;
-  font-size: 24px;
+  font-size: 22px;
+  color: #c80025;
 }
 .voice_list {
   margin-top: 13px;
@@ -764,7 +766,7 @@ export default {
   }
   .listen_more {
     position: absolute;
-    top: 40px;
+    top: 80px;
     right: -20px;
     width: 16px;
     color: #c70025;
@@ -773,7 +775,7 @@ export default {
   }
 }
 .voice_list_item_container {
-  padding-top: 6px;
+  padding-top: 9px;
 }
 .voice_item_container {
   display: flex;
@@ -839,25 +841,29 @@ export default {
   justify-content: space-between;
   color: #c70025;
   line-height: 1.5;
-  font-size: 14px;
-  padding: 3px 0;
+  font-size: 12px;
+  padding: 3px 0 0;
 }
 .head_img_container {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   margin: 0 5px;
   padding: 0;
   
   .head_img_default {
-    width: 60px;
-    height: 60px;
+    width: 56px;
+    height: 56px;
     box-sizing: border-box;
     border: 1px solid #c70025;
     background-color: #fff;
+  }
+  .head_img {
+    box-sizing: border-box;
+    border: 1px solid #c70025;
   }
   .head_img_default ,.head_img_default_first,.head_img {
     position: absolute;
@@ -867,8 +873,8 @@ export default {
     width: 100%;
     overflow: hidden;
     border-radius: 50%;
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 56px;
+    max-height: 56px;
     padding: 0;
     
   }
@@ -878,11 +884,11 @@ export default {
     width: 82px;
     height: 70px;
     box-sizing: border-box;
-    background: url('../assets/img/list_first.png') center bottom no-repeat;
-    background-size: contain;
+    background: url('../assets/img/list_first.png') 3px  top no-repeat;
+    background-size: 32px 24px;
     border-radius: 0;
     overflow: auto;
-    margin-top: -6px;
+    margin-top: -3px;
   }
 
 }
@@ -901,10 +907,12 @@ export default {
   align-items: center;
   align-items: center;
   width: 16px;
+  height: 28px;
   font-size: 20px;
   text-align: center;
-  span {
-    flex: 1;
+  img {
+    max-width: 100%;
+    max-height: 100%;
   }
 }
 .vote_btns {
@@ -957,11 +965,12 @@ export default {
     }
   }
   .info_line {
+    height: 24px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.5;
-    margin-bottom: 5px;
+    font-size: 16px;
   }
   .info_line_title {
     .info_line;
@@ -973,8 +982,9 @@ video {
 }
 .order_btn_container {
   width: 100%;
-  height: 50px;
-  position: absolute;
+  padding: 16px 12px 12px ;
+  box-sizing: border-box;
+  position: fixed;
   bottom: 0;
   img {
     width: 100%;

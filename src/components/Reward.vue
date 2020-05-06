@@ -55,7 +55,11 @@ export default {
   data(){
     return {
       rewardShow: false,
-      adultsList:[],
+      adultsList:[
+        // {userName: '000',url: 'https://s.cn.bing.net/th?id=ODL.7b61652172fdf6eee5d579d645e13bdb&w=146&h=146&c=7&rs=1&qlt=80&dpr=1.5&pid=RichNav'},
+        // {userName: '000',url: 'https://s.cn.bing.net/th?id=ODL.7b61652172fdf6eee5d579d645e13bdb&w=146&h=146&c=7&rs=1&qlt=80&dpr=1.5&pid=RichNav'},
+        // {userName: '000',url: 'https://s.cn.bing.net/th?id=ODL.7b61652172fdf6eee5d579d645e13bdb&w=146&h=146&c=7&rs=1&qlt=80&dpr=1.5&pid=RichNav'},
+      ],
       kidsList: [],
       othersList: [],
     }
@@ -176,6 +180,9 @@ export default {
           transform: translate(-50%,-50%);
           max-width: 100%;
           max-height: 100%;
+          border: none;
+          outline: none;
+          box-shadow: none;
         }
 
       }
