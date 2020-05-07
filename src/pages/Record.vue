@@ -175,7 +175,7 @@ export default {
       allTime: 60, //录音总计时长
       timer: null,
       swiperOption: {
-        initialSlide: 1,
+        // initialSlide: 1,
         pagination: {
           el: ".swiper-pagination",
           clickable: true

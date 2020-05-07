@@ -631,7 +631,12 @@ export default {
             }
             
             this.getMyVoice();
+          }else {
+            this.$toast.center("投票失败");
           }
+        }).catch(err=>{
+          console.log('投票接口报错',err)
+          this.$toast.center("投票失败");
         });
     },
 
