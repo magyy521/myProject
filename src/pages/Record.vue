@@ -185,7 +185,8 @@ export default {
           // }
         }
       },
-      agree: true
+      agree: true,
+      audioUploading: false,
     };
   },
   methods: {
@@ -217,15 +218,23 @@ export default {
     endRecord() {
       // @todo 为测试,记得删掉
       // this.url='https://cdn.lizhi.fm/city_public/2019/06/07/2741676016051009582.mp3'
-      this.NewReord.stop(true, (msg, data) => {
-        if (msg) {
-          this.$toast.center("网络繁忙，请刷新重试");
-          console.log('endRecord 报错',msg)
-          return;
-        }
-        console.log("录音上传的地址", data);
-        this.url = data;
-      });
+      this.audioUploading = true;
+      try{
+        this.NewReord.stop(true, (msg, data) => {
+          if (msg) {
+            this.$toast.center("网络繁忙，请刷新重试");
+            console.log('endRecord 报错',msg)
+            return;
+          }
+          console.log("录音上传的地址", data);
+          this.url = data;
+          this.audioUploading = false;
+        });
+      } catch {
+        console.log('this.NewReord.stop 报错')
+        this.audioUploading = false;
+      }
+      
     },
     // 点击开始录音的按钮,初始化一些数据
     start() {
@@ -253,6 +262,10 @@ export default {
     },
     next() {
       console.log("点击下一步");
+      if(this.audioUploading){
+        this.$toast.center("音频上传中,请稍后再试");
+        return;
+      }
       if(!this.url){
         this.$toast.center("暂无音频,请重新录音");
         return;
@@ -334,6 +347,10 @@ export default {
     },
     playMyAudio() {
       console.log('this.url',this.url)
+      if(this.audioUploading){
+        this.$toast.center("音频上传中,请稍后再试");
+        return;
+      }
       if (!this.url) {
         this.$toast.center("暂无音频");
         return false;
