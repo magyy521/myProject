@@ -1,8 +1,8 @@
 <template>
   <div class="record_page">
-    <div v-if="step != 3" class="choose_back_btn" @click="backChoose"></div>
+    <div v-show="step != 3" class="choose_back_btn" @click="backChoose"></div>
 
-    <div v-if="step == 1" class="step1_container">
+    <div v-show="step == 1" class="step1_container">
       <div  class="swiper_tip">
         <span v-if="audioType == 1">可左右选取你想朗读的文章</span>
       </div>
@@ -21,8 +21,9 @@
         </div>
       </div>
       <div  class="record_time">
-        <span v-show="timeLong > 0 && recording">00:{{ timeLongShow }}/01:00</span>
-        <div class="play_my_audio_btn_container" v-show="recordComplete && timeLong >5" @click="playMyAudio" >
+        <!-- timeLong > 0 && -->
+        <span v-show=" recording">00:{{ timeLongShow }}/01:00</span>
+        <div class="play_my_audio_btn_container" v-show="recordComplete && timeLong >4" @click="playMyAudio" >
           <img class="control_play_img" v-show="playStatus == 1 || playStatus == 2 " src="../assets/img/local_play_audio.png" alt="" />
           <img class="control_play_img" v-show="playStatus == 3" src="../assets/img/local_pause_audio.png" alt="" />
         </div>
@@ -34,8 +35,6 @@
         @ended="endAudio()"
         class="star_head_audio"
       >您的手机不支持此格式</audio>
-
-        
       </div>
 
       <div class="record_btns_container">
@@ -54,7 +53,7 @@
           <p class="btn_text">重录</p>
         </button>
 
-        <button v-if="recordComplete && timeLong >5" class="record_btn record_next_btn"  @click="next">
+        <button v-if="recordComplete && timeLong >4" class="record_btn record_next_btn"  @click="next">
           <img src="../assets/img/next_btn.png" alt="下一步" />
           <p class="btn_text">下一步</p>
         </button>
@@ -62,7 +61,7 @@
     </div>
     
 
-    <div class="submit_form_container" v-else-if="step == 2">
+    <div class="submit_form_container" v-show="step == 2">
       <img src="../assets/img/submit_bg.png" class="submit_bg" alt="">
       <div class="upload_params">
         <div class="param_item">
@@ -92,7 +91,7 @@
         </div>
         <div class="param_item">
           <p class="param_label">所在地区(必填)</p>
-          <select class="input province_select" name="" id="" v-model="area">
+          <select @blur="downPage" class="input province_select" name="" id="" v-model="area">
             <option v-for="(item,index) in provinceList" :key="index" :value="item">{{item}}</option>
           </select>
         </div>
@@ -120,9 +119,8 @@
         </button>
       </div>
     </div>
-    <template v-else-if="step == 3">
-      <div class="success_modal">
-        <p class="success_tip">上传成功!</p>
+    <div v-show="step == 3" class="success_modal">
+        <p class="success_tip">上传成功!{{step}}</p>
         <div class="success_content">
           <p class="success_p">立刻分享为自己拉票</p>
           <p class="success_p">有机会赢取精美奖品!</p>
@@ -133,7 +131,6 @@
           <img  @click="backHome" class="success_back_home" src="../assets/img/success_back_home.png" alt="返回首页" />
         </div>
       </div>
-    </template>
 
     <MaskC ref="mask"></MaskC>
     <Privacy ref="privacy"></Privacy>
@@ -148,7 +145,7 @@ import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import uuid from "uuid-js";
 import { api } from "../api";
-import { jsConfig } from "../assets/wechat_outh";
+import { jsConfig, wechatShare } from "../assets/wechat_outh";
 import articleList from "../assets/articles"
 import areas from '../assets/areas'
 export default {
@@ -197,11 +194,17 @@ export default {
       this.swiper.slideNext()
     },
     share() {
-      this.$router.replace(`/my?voiceId=${this.$store.state.id}`);
-      // this.$refs.mask.show();
+      // this.$router.replace(`/my?voiceId=${this.$store.state.id}`);
+      this.initShareConfig();
+      this.$refs.mask.show();
     },
     backChoose(){
-      this.$router.back()
+      if(this.step == 1){
+        this.$router.back()
+      }else if(this.step == 2){
+        this.step = 1
+      }
+      
     },
     backHome() {
       this.$router.replace("/");
@@ -210,6 +213,7 @@ export default {
     startRecord() {
       console.log("record内部开始录音啦");
       this.NewReord.start(err => {
+        console.log('真正开始录音没有调起来',err)
         if (err) {
           this.$toast.center(err);
         }
@@ -254,11 +258,16 @@ export default {
       }, 1000);
     },
     stop() {
+      if(this.timeLong <= 4){
+        this.$toast.center("录音时间需大于5s");
+        return;
+      }
       window.clearInterval(this.timer);
-      this.timer = null;
-      this.recording = false;
-      this.recordComplete = true;
-      this.endRecord();
+        this.timer = null;
+        this.recording = false;
+        this.recordComplete = true;
+        this.endRecord();
+      
     },
     next() {
       console.log("点击下一步");
@@ -403,7 +412,7 @@ export default {
         let type2Dom = `
         <div class="swiper-slide"><div class="text-content">
         <p class="type2_title">话题方向参考：</p>
-        <p class="type2_p">1、、突如其来的疫情给你的生活带来改变了吗？你是如何调节心适应这种变化的？分享你的故事，帮助“小候鸟”提升情绪管理能力</p>
+        <p class="type2_p">1、突如其来的疫情给你的生活带来改变了吗？你是如何调节心适应这种变化的？分享你的故事，帮助“小候鸟”提升情绪管理能力</p>
         <p class="type2_p">2、你会有“拖延症“的困扰吗？分享你让自己更自律的好方法，帮助”小候鸟“提升自我管理能力</p>
         <p class="type2_p">3、你是否也曾经是一个“小候鸟”？曾有过父母长时间不在身边，或者随父母离开家乡漂泊在外的经历。分享你的故事，帮助小候鸟理解父母，更好与身边人相处</p>
         <p class="type2_p">4、关于保持心理健康，成为更好的自己，你想对“小候鸟”们说些什么……</p>
@@ -415,6 +424,27 @@ export default {
       this.swiper.appendSlide(dom)
       // this.swiper.slideTo(1)
     },
+    initShareConfig(){
+      let type = UA.lz ? "lizhi" : UA.wx ? "wechat" : "chrome";
+      if(type == "lizhi"){
+        lz && lz.configShareUrl({
+          title: '“爱暖童心，声声不息”小候鸟关爱季',
+          url:  `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.$store.state.id}`,
+          desc: '快来参与，为爱留声，赢取精美奖品，有机会与大咖同行参与广播剧录制',
+          "image-url": 'https://vodactivity.lizhifm.com/static/kfc/static/share_config.jpg',
+          platforms: [],
+        })
+      }
+
+      if(type == "wechat") {
+        wechatShare({
+          title: '“爱暖童心，声声不息”小候鸟关爱季',
+          link:  `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.$store.state.id}`,
+          desc: '快来参与，为爱留声，赢取精美奖品，有机会与大咖同行参与广播剧录制',
+          imgUrl: 'https://vodactivity.lizhifm.com/static/kfc/static/share_config.jpg',
+        });
+      }
+    }
   },
   computed: {
     swiper() {
@@ -570,9 +600,8 @@ export default {
       -webkit-appearance:none;
       -moz-appearance:none;
       appearance:none; /*去掉下拉箭头*/
-      
       background: url('../assets/img/select_arrow.png') 96% center no-repeat;
-      background-size: auto;
+      background-size: 16px auto;
       background-clip: content-box;
     }
     .type_choose {
@@ -799,6 +828,7 @@ export default {
   text-align: left;
   text-indent: -26px;
   margin-left: 26px;
+  text-align: unset;
 }
 
 

@@ -29,6 +29,7 @@ let WechatVoice = {
     console.log('wx录音点击了start,开始寻求用户录音权限')
     wx.startRecord({
       success: () => {
+        console.log('.......')
         WechatVoice.status = STATUS.recording;
         WechatVoice.startTime = new Date().valueOf();
         console.log('微信获取到用户录音权限')
@@ -39,6 +40,11 @@ let WechatVoice = {
         console.log('weixin用户拒绝录音')
         cb && cb("用户拒绝录音", null);
       },
+      fail:(err)=>{
+        console.log('掉起微信录音fail',err)
+        wx.startRecord()
+        cb && cb("录音失败", null);
+      },
       complete:(res)=>{
         console.log('掉起微信录音',res)
       }
@@ -46,7 +52,7 @@ let WechatVoice = {
   },
   stop(upload, cb) {
     let that = this;
-    console.log('微信点击停止录音')
+    console.log('微信点击停止录音',WechatVoice)
     if (WechatVoice.status == STATUS.nothing) {
       console.log('尚未开始录音?????')
       cb("尚未开始录音", null);
@@ -84,6 +90,7 @@ let WechatVoice = {
         });
       },
       fail: function (res) {
+
         console.log('微信停止录音失败',res)
         cb(res, null);
       }
@@ -255,20 +262,6 @@ let Record = {
           progressCb && progressCb(count * 500);
         }, 500);
       });
-    });
-    Record.coreIns.start((err2, data) => {
-      console.log('封装的Record,start',err2,data)
-      if (err2) {
-        return cb(err2);
-
-      }
-      cb && cb(null, data);
-      let count = 0;
-      Record.timer && clearInterval(Record.timer);
-      Record.timer = setInterval(() => {
-        ++count;
-        progressCb && progressCb(count * 500);
-      }, 500);
     });
   },
   stop: (upload, cb) => {

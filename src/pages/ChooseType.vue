@@ -39,7 +39,7 @@ export default {
     background: url('../assets/img/record_bg.png') center no-repeat;
     background-size: cover;
     box-sizing: border-box;
-    padding: 16px;
+    padding: 10px;
 
     .choose_back_btn {
         width: 90px;

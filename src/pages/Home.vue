@@ -858,17 +858,16 @@ export default {
   height: 56px;
   margin: 0 5px;
   padding: 0;
-  
+  border: 1px solid #c70025;
+  border-radius: 50%;
   .head_img_default {
     width: 56px;
     height: 56px;
     box-sizing: border-box;
-    border: 1px solid #c70025;
     background-color: #fff;
   }
   .head_img {
     box-sizing: border-box;
-    border: 1px solid #c70025;
   }
   .head_img_default ,.head_img_default_first,.head_img {
     position: absolute;
@@ -876,6 +875,7 @@ export default {
     top: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
+    box-sizing: border-box;
     overflow: hidden;
     border-radius: 50%;
     max-width: 56px;
@@ -1000,7 +1000,7 @@ video {
 .play_img {
   position: absolute;
   height: 24px;
-  left: 54%;
+  left: 53%;
   top: 50%;
   transform: translate(-50%, -50%);
 }

@@ -3,7 +3,6 @@
     <div class="share_img_container">
       <img src="../assets/img/share_img.png" alt="">
     </div>
-    
   </div>
 </template>
 
