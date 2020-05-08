@@ -120,7 +120,7 @@
       </div>
     </div>
     <div v-show="step == 3" class="success_modal">
-        <p class="success_tip">上传成功!{{step}}</p>
+        <p class="success_tip">上传成功!</p>
         <div class="success_content">
           <p class="success_p">立刻分享为自己拉票</p>
           <p class="success_p">有机会赢取精美奖品!</p>
