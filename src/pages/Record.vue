@@ -156,7 +156,7 @@ export default {
       playStatus: 1,
       audioType: 1,//上传的类型,1是阅读 ,2是故事
       provinceList: areas,
-      step: 2,
+      step: 1,
       headUrl: "",
       phone: "",
       title: "爱暖童心,声声不息",
