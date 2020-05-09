@@ -91,7 +91,7 @@
         </div>
         <div class="param_item">
           <p class="param_label">所在地区(必填)</p>
-          <select @blur="downPage" class="input province_select" name="" id="" v-model="area">
+          <select @blur="testBlur" class="input province_select" name="" id="" v-model="area">
             <option v-for="(item,index) in provinceList" :key="index" :value="item">{{item}}</option>
           </select>
         </div>
@@ -156,7 +156,7 @@ export default {
       playStatus: 1,
       audioType: 1,//上传的类型,1是阅读 ,2是故事
       provinceList: areas,
-      step: 1,
+      step: 2,
       headUrl: "",
       phone: "",
       title: "爱暖童心,声声不息",
@@ -187,6 +187,12 @@ export default {
     };
   },
   methods: {
+    testBlur(){
+      if(this.area == ''){
+        this.area = '河北'
+      }
+      this.downPage()
+    },
     swiperPrev(){
       this.swiper.slidePrev()
     },

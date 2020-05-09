@@ -9,7 +9,6 @@
     <div class="stars_container">
       <div class="star_item" @click.stop="playAudioSingle('audioStar1')">
         <div class="star_head"></div>
-        <div class="star_name">李小萌</div>
         <div class="star_play_btn" >
           <img
             v-show="audioObj['audioStar1'].playStatus == 3 "
@@ -23,7 +22,6 @@
       </div>
       <div class="star_item" @click.stop="playAudioSingle('audioStar2')">
         <div class="star_head"></div>
-        <div class="star_name">王静文</div>
         <div class="star_play_btn" >
           <img
             v-show="audioObj['audioStar2'].playStatus == 3 "
@@ -1016,12 +1014,10 @@ audio {
   margin-top: 25px;
   .star_head {
     position: relative;
-    width: 110px;
-    height: 110px;
+    width: 130px;
+    height: 130px;
   }
-  .star_name {
-    text-align: center;
-  }
+
   .star_item {
     &:nth-of-type(1) {
       margin-right: 60px;
@@ -1038,19 +1034,20 @@ audio {
     }
   }
   .star_play_btn {
-    width: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 130px;
     height: 40px;
-    // background: url("../assets/img/star_play_btn.png") center no-repeat;
-    // background-size: contain;
     img {
-      width: 100%;
+      width: 110px;
     }
   }
 }
 
 .break_line_container {
-  width: 100%;
-  margin: 24px 0;
+  width: 90%;
+  margin: 24px auto;
   img {
     width: 100%;
   }

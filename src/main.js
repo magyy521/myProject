@@ -19,9 +19,9 @@ import "lib-flexible";
 import axios from "axios";
 import { UA, wechatOauth } from "./utils";
 
-// import VC from "vconsole";
+import VC from "vconsole";
 
-// new VC();
+new VC();
 
 Vue.prototype.axios = axios;
 
