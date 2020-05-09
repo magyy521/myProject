@@ -188,8 +188,8 @@
               <audio :ref="'audioAdults' + index" :src="voice.url"  @ended="endAudioList('adultsVoiceList',index)" controls="controls">您的手机不支持此格式</audio>
             </div>
             <div class="audio_detail" @click="toMy(voice)">
-              <p class="audio_userName">{{ voice.userName }}</p>
               <p class="audio_title">{{ voice.title }}</p>
+              <p class="audio_userName">{{ voice.userName }}</p>
               <p class="audio_qty">{{ voice.votesNum || 0 }}票</p>
             </div>
             <div class="vote_btns">
@@ -241,8 +241,8 @@
               <audio :ref="'audioKids' + index" :src="voice.url" @ended="endAudioList('kidsVoiceList',index)" controls="controls">您的手机不支持此格式</audio>
             </div>
             <div class="audio_detail" @click="toMy(voice)">
-              <p class="audio_userName">{{ voice.userName }}</p>
               <p class="audio_title">{{ voice.title }}</p>
+              <p class="audio_userName">{{ voice.userName }}</p>
               <p class="audio_qty">{{ voice.votesNum }}票</p>
             </div>
             <div class="vote_btns">
