@@ -434,7 +434,7 @@ export default {
       let type = UA.lz ? "lizhi" : UA.wx ? "wechat" : "chrome";
       if(type == "lizhi"){
         lz && lz.configShareUrl({
-          title: '“爱暖童心，声声不息”小候鸟关爱季',
+          title: '“爱暖童心，声声不息”肯德基小候鸟六一关爱季',
           url:  `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.$store.state.id}`,
           desc: '快来参与，为爱留声，赢取精美奖品，有机会与大咖同行参与广播剧录制',
           "image-url": 'https://vodactivity.lizhifm.com/static/kfc/static/share_config.jpg',
@@ -444,7 +444,7 @@ export default {
 
       if(type == "wechat") {
         wechatShare({
-          title: '“爱暖童心，声声不息”小候鸟关爱季',
+          title: '“爱暖童心，声声不息”肯德基小候鸟六一关爱季',
           link:  `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.$store.state.id}`,
           desc: '快来参与，为爱留声，赢取精美奖品，有机会与大咖同行参与广播剧录制',
           imgUrl: 'https://vodactivity.lizhifm.com/static/kfc/static/share_config.jpg',
