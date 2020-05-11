@@ -49,7 +49,7 @@ export const jsConfig = (url) => {
 
       axios({
         method: "post",
-        url: '//m.lizhi.fm/vodapi/wx/requestJsTicket',
+        url: 'https://m.lizhi.fm/vodapi/wx/requestJsTicket',
         headers: {
                   "Content-Type": "application/json"
                 },

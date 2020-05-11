@@ -34,6 +34,7 @@ export default {
 
       if (UA.wx && "wx" in window) {
         jsConfig(location.href);
+
         let userId = localStorage.getItem("userId");
         if (userId) {
           this.$store.commit("setUser", { prop: "userId", val: userId });

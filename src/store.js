@@ -23,6 +23,11 @@ export default new Vuex.Store({
     activityOver: state =>{
       let nowTime = new Date().getTime();
       return nowTime >= 1591070399000; // 6-2号的时间戳
+    },
+    showRewardTime: state =>{
+      let nowTime = new Date().getTime();
+      console.log(new Date(),nowTime)
+      return nowTime >= 1591891200000; // 6-2号的时间戳
     }
   },
   mutations: {

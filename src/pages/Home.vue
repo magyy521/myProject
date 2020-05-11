@@ -337,7 +337,8 @@ import Intro from "../components/Intro";
 import Reward from "../components/Reward";
 import InfiniteLoading from "vue-infinite-loading";
 import { api } from "../api";
-
+import { UA } from "../assets/common";
+import { jsConfig, wechatShare } from "../assets/wechat_outh";
 import lixiaomengAudio from '../assets/audio/lixiaomeng_audio.mp3'
 import wangjingwenAudio from '../assets/audio/wangjingwen_audio.mp3'
 import kfcAudio from '../assets/audio/kfc_audio.mp3'
@@ -662,21 +663,7 @@ export default {
         this.getKidsList(false, $state);
       }
     },
-    
-    // 展示中奖信息
-    showReward(){
-      this.axios({
-        method:'get',
-        url: api.getReward,
-      }).then(res=>{
-        console.log('获取中奖信息',res)
-        if (res.data.data && res.data.data.adultList.length) {
-          this.$refs.reward.initData(res.data.data);
-        }
-      })
-      // this.$refs.reward.initData({});
-    },
-    
+
     changeTabIndex(tab){
       this.tabIndex = tab;
       if(tab == 2 && this.kidsVoiceList.length == 0){
@@ -695,15 +682,43 @@ export default {
     toJoin() {
       this.$router.push("/choosetype");
     },
+    initShareConfig(){
+      let type = UA.lz ? "lizhi" : UA.wx ? "wechat" : "chrome";
+      if(type == "lizhi"){
+        lz && lz.configShareUrl({
+          title: '“爱暖童心，声声不息”肯德基小候鸟六一关爱季',
+          url:  `https://vodactivity.lizhifm.com/static/kfc/#/home`,
+          desc: '快来参与，为爱留声，赢取精美奖品，有机会与大咖同行参与广播剧录制',
+          "image-url": 'https://vodactivity.lizhifm.com/static/kfc/static/share_config.jpg',
+          platforms: [],
+        })
+      }
+
+      console.log('tttttttttttttttt')
+      if(type == "wechat") {
+        console.log('??????????????')
+        jsConfig(location.href).then(()=>{
+          wechatShare({
+          title: '“爱暖童心，声声不息”肯德基小候鸟六一关爱季',
+          link:  `https://vodactivity.lizhifm.com/static/kfc/#/home`,
+          desc: '快来参与，为爱留声，赢取精美奖品，有机会与大咖同行参与广播剧录制',
+          imgUrl: 'https://vodactivity.lizhifm.com/static/kfc/static/share_config.jpg',
+        });
+        })
+        
+      }
+    }
   },
   created() {
     console.log("this.wechatUserInfo", this.wechatUserInfo);
   },
   mounted(){
-    this.showReward()
-    // if(this.$store.state.userId){
-    //   this.getMyVoice();
-    // }
+    this.initShareConfig()
+    if(this.$store.getters.showRewardTime){
+      this.$refs.reward.show();
+    }
+
+    
   },
   watch: {
     userId: {

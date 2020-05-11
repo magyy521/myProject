@@ -4,46 +4,6 @@
       <img  src="../assets/img/reward_close.png" alt="">
     </span>
     <div class="reward_content_container">
-      <div class="reward_type">
-        <h3 class="reward_type_title">"人气好声音"成人组</h3>
-        <div class="reward_content">
-          <div v-for="(item,index) in adultsList" :key="index" class="reward_item">
-            <div class="reward_head">
-              <img v-if="item.url" class="user_head" :src="item.url" alt="">
-              <img class="reward_head_img" v-if="index == 0" src="../assets/img/reward_head1.png" alt="">
-              <img class="reward_head_img"  v-if="index == 1" src="../assets/img/reward_head2.png" alt="">
-              <img class="reward_head_img"  v-if="index == 2" src="../assets/img/reward_head3.png" alt="">
-            </div>
-            <p class="reward_name">{{item.userName}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="reward_type">
-        <h3 class="reward_type_title">"人气好声音"少儿组</h3>
-        <div class="reward_content">
-          <div v-for="(item,index) in kidsList" :key="index" class="reward_item">
-            <div class="reward_head">
-              <img v-if="item.url" class="user_head" :src="item.url" alt="">
-              <img class="reward_head_img"  v-if="index == 0" src="../assets/img/reward_head1.png" alt="">
-              <img class="reward_head_img"  v-if="index == 1" src="../assets/img/reward_head2.png" alt="">
-              <img class="reward_head_img"  v-if="index == 2" src="../assets/img/reward_head3.png" alt="">
-            </div>
-            <p class="reward_name">{{item.userName}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="reward_type reward_other_type">
-        <h3 class="reward_type_title">"暖心好声音"获奖者</h3>
-        <div class="reward_content">
-          <div v-for="(item,index) in othersList" :key="index" class="reward_item">
-            <div class="reward_head">
-              <img v-if="item.url" class="user_head" :src="item.url" alt="">
-              <img class="reward_head_img" src="../assets/img/reward_other.png" alt="">
-            </div>
-            <p class="reward_name">{{item.userName}}</p>
-          </div>
-        </div>
-      </div>
     </div>
     
   </div>
@@ -55,22 +15,9 @@ export default {
   data(){
     return {
       rewardShow: false,
-      adultsList:[
-        // {userName: '000',url: 'https://s.cn.bing.net/th?id=ODL.7b61652172fdf6eee5d579d645e13bdb&w=146&h=146&c=7&rs=1&qlt=80&dpr=1.5&pid=RichNav'},
-        // {userName: '000',url: 'https://s.cn.bing.net/th?id=ODL.7b61652172fdf6eee5d579d645e13bdb&w=146&h=146&c=7&rs=1&qlt=80&dpr=1.5&pid=RichNav'},
-        // {userName: '000',url: 'https://s.cn.bing.net/th?id=ODL.7b61652172fdf6eee5d579d645e13bdb&w=146&h=146&c=7&rs=1&qlt=80&dpr=1.5&pid=RichNav'},
-      ],
-      kidsList: [],
-      othersList: [],
     }
   },
   methods: {
-    initData(data){
-      this.adultsList = data.adultList;
-      this.kidsList = data.childrenList;
-      this.othersList = data.otherList;
-      this.show()
-    },
     show(){
       this.rewardShow = true;
     },
@@ -112,113 +59,6 @@ export default {
     .reward_content_container {
       width: 290px;
       margin: 0 auto;
-    }
-    .reward_type {
-      width: 100%;
-      margin-top: -10px;
-    }
-
-
-    .reward_content {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      height: 136px;
-      align-items: flex-end;
-    }
-    .reward_type_title {
-        padding: 6px 0;
-        color: #fff;
-        text-align: center;
-        font-size: 16px;
-        font-weight: normal;
-      }
-    .reward_item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      &:nth-of-type(1){
-        order: 2;
-        align-self: flex-start;
-        .reward_head {
-          width: 100px;
-          .reward_head_img {
-            width: 100px;
-          }
-        }
-        .user_head {
-          width: 76px;
-        }
-      }
-      &:nth-of-type(2){
-        order: 1;
-        
-      }
-      &:nth-of-type(3){
-        order: 3;
-      }
-
-      .user_head {
-        width: 90px;
-        overflow: hidden;
-      }
-      .reward_head {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 86px;
-        height: 110px;
-        background: center no-repeat;
-        background-size: contain;
-        overflow: hidden;
-        .reward_head_img {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          width: 86px;
-          transform: translate(-50%,-50%);
-          max-width: 100%;
-          max-height: 100%;
-          border: none;
-          outline: none;
-          box-shadow: none;
-        }
-
-      }
-    }
-
-    .reward_name {
-        display: block;
-        width: 80px;
-        text-align: center;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        height: 16px;
-        white-space: nowrap;
-        color: #9f2b44;
-        margin: 0;
-      }
-
-    .reward_other_type {
-      
-      .reward_content {
-        height: auto;
-      }
-      .reward_item {
-        .reward_head {
-          height: 83px;
-        }
-         &:nth-of-type(1){
-            align-self: flex-end;
-            .reward_head {
-              width: 86px;
-            }
-            .user_head {
-              width: 76px;
-            }
-          }
-      }
     }
 
   }
