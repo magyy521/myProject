@@ -98,7 +98,7 @@ export default {
       if(type == "lizhi") {
         console.log('调起分享',lz)
         lz && lz.shareUrl({
-          title: '“爱暖童心，声声不息”小候鸟关爱季',
+          title: '“爱暖童心，声声不息”肯德基小候鸟六一关爱季',
           url:  `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.id}`,
           desc: '荔枝携手肯德基小候鸟基金共同发起“爱暖童心，声声不息”公益活动，马上参与，一起为爱留声，赢取精美礼品，更有机会与大咖同行，参与广播剧录制，来自@荔枝APP 网页链接（https://vodactivity.lizhifm.com/static/kfc/#/home)',
           "image-url": 'https://vodactivity.lizhifm.com/static/kfc/static/share_config.jpg',
@@ -146,7 +146,7 @@ export default {
       let type = UA.lz ? "lizhi" : UA.wx ? "wechat" : "chrome";
       if(type == "lizhi"){
         lz && lz.configShareUrl({
-          title: '“爱暖童心，声声不息”小候鸟关爱季',
+          title: '“爱暖童心，声声不息”肯德基小候鸟六一关爱季',
           url:  `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.id}`,
           desc: '快来参与，为爱留声，赢取精美奖品，有机会与大咖同行参与广播剧录制',
           "image-url": 'https://vodactivity.lizhifm.com/static/kfc/static/share_config.jpg',
@@ -156,7 +156,7 @@ export default {
 
       if(type == "wechat") {
         wechatShare({
-          title: '“爱暖童心，声声不息”小候鸟关爱季',
+          title: '“爱暖童心，声声不息”肯德基小候鸟六一关爱季',
           link:  `https://vodactivity.lizhifm.com/static/kfc/#/my?voiceId=${this.id}`,
           desc: '快来参与，为爱留声，赢取精美奖品，有机会与大咖同行参与广播剧录制',
           imgUrl: 'https://vodactivity.lizhifm.com/static/kfc/static/share_config.jpg',
