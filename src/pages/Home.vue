@@ -658,7 +658,7 @@ export default {
 
     // 儿童列表无限加载
     infiniteHandlerKids($state) {
-      if (this.canLoadMoreAdults) {
+      if (this.canLoadMoreKids) {
         this.pageNumKids = this.pageNumKids + 1;
         this.getKidsList(false, $state);
       }
