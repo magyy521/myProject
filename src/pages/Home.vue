@@ -694,9 +694,7 @@ export default {
         })
       }
 
-      console.log('tttttttttttttttt')
       if(type == "wechat") {
-        console.log('??????????????')
         jsConfig(location.href).then(()=>{
           wechatShare({
           title: '“爱暖童心，声声不息”肯德基小候鸟六一关爱季',
@@ -710,21 +708,19 @@ export default {
     }
   },
   created() {
-    console.log("this.wechatUserInfo", this.wechatUserInfo);
+    // console.log("this.wechatUserInfo", this.wechatUserInfo);
   },
   mounted(){
     this.initShareConfig()
     if(this.$store.getters.showRewardTime){
       this.$refs.reward.show();
     }
-
-    
   },
   watch: {
     userId: {
       immediate: true, // 这句重要
       handler(val) {
-        console.log('userId变动',val)
+        // console.log('userId变动',val)
         if (val) {
           // 这里应该不需要了,在这里写上获取用户音频就可以了
           // this.getAdultsList(true);
