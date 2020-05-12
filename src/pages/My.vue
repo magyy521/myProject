@@ -81,6 +81,10 @@ export default {
         this.$toast.center("今日票数已经用完");
         return;
       }
+      if(!this.$store.state.userId){
+        this.$toast.center("请先登录才能参与活动");
+        return;
+      }
       this.axios
         .get(`${api.submitVote}?audioId=${this.id}&userId=${this.$store.state.userId}`)
         .then(res => {
