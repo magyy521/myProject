@@ -309,7 +309,10 @@ export default {
         this.$toast.center("请输入正确的手机号码");
         return;
       }
-
+      if(!this.$store.state.userId){
+        this.$toast.center("请先登录才能参与活动");
+        return;
+      }
       let state = this.$store.state;
       let headUrlObj = {};
       if (!state.userId) {
