@@ -164,7 +164,7 @@
               <img v-if="index == 0" src="../assets/img/first.png" alt />
               <img v-else-if="index == 1" src="../assets/img/second.png" alt />
               <img v-else-if="index == 2" src="../assets/img/third.png" alt />
-              <span v-else>{{ index + 1 }}</span>
+              <span v-else  class="voice_index_detail">{{ index + 1 }}</span>
             </div>
             <div class="head_img_container" @click="playAudioList('audioAdults' + index)">
               <div v-if='index == 0' class="head_img_default_first" ></div>
@@ -216,7 +216,7 @@
               <img v-if="index == 0" src="../assets/img/first.png" alt />
               <img v-else-if="index == 1" src="../assets/img/second.png" alt />
               <img v-else-if="index == 2" src="../assets/img/third.png" alt />
-              <span v-else>{{ index + 1 }}</span>
+              <span v-else class="voice_index_detail">{{ index + 1 }}</span>
             </div>
             <div class="head_img_container" @click="playAudioList('audioKids' + index)">
               <div v-if='index == 0' class="head_img_default_first" ></div>
@@ -876,7 +876,7 @@ export default {
   align-items: center;
   width: 56px;
   height: 56px;
-  margin: 0 5px;
+  margin: 0 3px;
   padding: 0;
   border: 1px solid #c70025;
   border-radius: 50%;
@@ -930,14 +930,20 @@ export default {
 .voice_index {
   display: flex;
   align-items: center;
-  align-items: center;
-  width: 16px;
+  justify-content: center;
+  width: 28px;
   height: 28px;
-  font-size: 20px;
+  flex-shrink: 0;
+  font-size: 14px;
   text-align: center;
   img {
-    max-width: 100%;
+    max-width: 16px;
     max-height: 100%;
+  }
+  .voice_index_detail {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 .vote_btns {
@@ -946,7 +952,10 @@ export default {
   .vote_btn {
     width: 60px;
     height: 20px;
-    margin-left: 10px;
+    &:last-of-type {
+      margin-left: 10px;
+    }
+    
   }
 }
 
