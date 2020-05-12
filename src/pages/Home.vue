@@ -559,6 +559,9 @@ export default {
 
     // 获取我的音频
     getMyVoice() {
+      if(!this.$store.state.userId){
+        return;
+      }
       this.axios
         .get(`${api.getUserDetail}?userId=${this.$store.state.userId}&userName=${this.$store.state.userName}&headUrl=${this.$store.state.headUrl}`)
         .then(res => {
@@ -601,6 +604,10 @@ export default {
       }
       if(!voteId) {
         this.$toast.center("暂无音频");
+        return;
+      }
+      if(!this.$store.state.userId){
+        this.$toast.center("请先登录才能参与活动");
         return;
       }
       this.axios({
@@ -680,6 +687,10 @@ export default {
       this.$router.push(`/my?voiceId=${voice.id}`);
     },
     toJoin() {
+      if(!this.$store.state.userId){
+        this.$toast.center("请先登录才能参与活动");
+        return;
+      }
       this.$router.push("/choosetype");
     },
     initShareConfig(){
